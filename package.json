@@ -1,0 +1,27 @@
+{
+  "name": "web-tetris",
+  "version": "1.0.0",
+  "description": "Multiplayer networked web Tetris game",
+  "scripts": {
+    "srv-dev": "nodemon --exec babel-node -w src src/server/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brhamidi/web-tetris.git"
+  },
+  "keywords": [],
+  "author": "Brahim Hamidi - Matthias Srun",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brhamidi/web-tetris/issues"
+  },
+  "homepage": "https://github.com/brhamidi/web-tetris#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "nodemon": "^1.18.9"
+  }
+}
