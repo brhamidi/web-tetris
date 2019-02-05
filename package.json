@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Multiplayer networked web Tetris game",
   "scripts": {
-    "srv-dev": "nodemon --exec babel-node -w src src/server/main.js",
+    "srv-dev": "nodemon --exec babel-node -w src/server src/server/main.js",
     "client-dev": "webpack-dev-server --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "react-dom": "^16.7.0",
+    "socket.io": "^2.2.0"
   }
 }

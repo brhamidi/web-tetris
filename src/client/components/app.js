@@ -1,12 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <div>
-        Hello,{this.props.name}
-      </div>
-    );
-  }
+const app = () => {
+		return (
+				<div className='app'>
+						<h2> Web Tetris </h2>
+						<div className='game'>
+								Game
+						</div>
+						<div className="spectre">
+								spectre
+						</div>
+				</div>
+		)
 }
+
+export default app
