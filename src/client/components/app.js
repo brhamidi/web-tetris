@@ -1,17 +1,11 @@
 import React from 'react';
 
-const app = () => {
-		return (
-				<div className='app'>
-						<h2> Web Tetris </h2>
-						<div className='game'>
-								Game
-						</div>
-						<div className="spectre">
-								spectre
-						</div>
-				</div>
-		)
-}
+import * as styles from './app.css.js';
 
-export default app
+const App = () => (
+  <div style={styles.divStyle}>
+    <p style={styles.pStyle}>Get started with inline style</p>
+  </div>
+);
+
+export default App;

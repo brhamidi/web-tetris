@@ -6,7 +6,7 @@ const logerror = debug('tetris:error') , loginfo = debug('tetris:info')
 const initApp = (app, params, cb) => {
 		const {host, port} = params
 		const handler = (req, res) => {
-				const file = '../../index.html'
+				const file = '/../../index.html'
 				fs.readFile(__dirname + file, (err, data) => {
 						if (err) {
 								console.log(err)
@@ -31,7 +31,7 @@ const initEngine = io => {
 				console.log("Socket connected: " + socket.id)
 				socket.on('action', (msg) => {
 						if (msg === 'start') {
-							sockett.emit('info', 'start not imple .. ');
+							sockett.emit('info', 'start not implem .. ');
 						}
 						else {
 							socket.emit('info', 'action not handled');
@@ -43,7 +43,7 @@ const initEngine = io => {
 		})
 }
 
-function create(params){
+const create = (params) => {
 		const promise = new Promise( (resolve, reject) => {
 				const app = require('http').createServer()
 				initApp(app, params, () => {
@@ -65,5 +65,5 @@ function create(params){
 		return promise
 }
 
-create({host: "127.0.0.1", port: "3000", url: "/test"})
+create({host: "127.0.0.1", port: "3000", url: "/"})
 		.then(() => { console.log(('tetris up'))} )
