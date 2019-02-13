@@ -1,0 +1,17 @@
+hello world
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+var socket = io();
+
+console.log(socket.id);
+socket.on('connect', () => {console.log(`this is connect ${socket.id}`)})
+socket.emit('info', 'room', 'player1');
+socket.on('datatest', (data) => {console.log(data)});
+socket.on("info_response", (i) => 
+		{
+			console.log(i);
+			socket.emit('start');
+		});
+socket.on('tetrimino', (data) => {console.log(data);});
+</script>
