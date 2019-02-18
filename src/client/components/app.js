@@ -1,11 +1,20 @@
 import React from 'react';
 
-import * as styles from './app.css.js';
+import Board from './board';
+import Score from './score';
+import Spectre from './spectre';
+
+import { List } from 'immutable';
+
+const list = List().set(19, undefined).map(e => List().set(9, undefined));
 
 const App = () => (
-  <div style={styles.divStyle}>
-    <p style={styles.pStyle}>Get started with inline style</p>
-  </div>
+		<div>
+				<h3> tetris </h3>
+				<Score />
+				<Board list={list} />
+				<Spectre />
+		</div>
 );
 
 export default App;
