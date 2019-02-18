@@ -15,11 +15,25 @@ class	Player
 	}
 }
 
+const tetriminos_list = [
+	[{x:1, y:1}, {x:1, y:2}, {x:2, y:1}, {x:2, y:2}], // square
+	[{x:1, y:2}, {x:2, y:1}, {x:2, y:2}, {x:3, y:1}], // S
+	[{x:1, y:1}, {x:2, y:1}, {x:2, y:2}, {x:3, y:2}], // Z
+	[{x:1, y:0}, {x:1, y:1}, {x:1, y:2}, {x:1, y:3}], // line
+	[{x:1, y:0}, {x:1, y:1}, {x:1, y:2}, {x:2, y:2}], // L
+	[{x:1, y:2}, {x:2, y:0}, {x:2, y:1}, {x:2, y:2}], // ^L
+	[{x:0, y:1}, {x:1, y:0}, {x:1, y:1}, {x:2, y:1}] ]; // T
+
+const color = ['yellow', 'green', 'red', 'cyan', 'orange', 'blue', 'violet'];
+
 class	Tetromino
 {
 	constructor()
 	{
-		this.shape = Math.floor(Math.random() * Math.floor(7));
+		var i = Math.floor(Math.random() * Math.floor(7));
+
+		this.shape = tetriminos_list[i];
+		this.color = color[i];
 		this.x = Math.floor(Math.random() * Math.floor(10));
 	}
 }
@@ -29,6 +43,7 @@ class	Game
 	constructor(name, player1)
 	{
 		this.name = name;
+		this.running = false;
 		this.player1 = player1;
 		this.player2 = undefined;
 		this.list_of_tetrominoes = [new Tetromino()];
@@ -70,7 +85,6 @@ function handler (req, res) {
 io.on('connection', function(socket){
 
 	var	actual_game = undefined;
-	var	pos = 0;
 
 	console.log(`a user connected ${socket.id}`);
 	socket.on('info', function(room, player){
@@ -83,9 +97,13 @@ io.on('connection', function(socket){
 			list_of_games.push(actual_game);
 			socket.emit('info_response', 'host');
 		}
+		else if (game.running)
+		{
+			socket.emit('info_response', 'started');
+			console.log('already started');
+		}
 		else if (game.player2 === undefined)
 		{
-			game.player1.socket.emit('datatest', 'player2 to player1');
 			if (game.player1.name === player)
 			{
 				socket.emit('info_response', 'name');
@@ -104,25 +122,64 @@ io.on('connection', function(socket){
 			console.log('full');
 		}
 		console.log(list_of_games);
-		//	socket.emit('datatest', list_of_games); //error on socket object
 	});
 
-	function send_tetrimino()
+	var send_tetrimino = (function() {
+		var	pos = 0;
+
+		return function() {
+			if (actual_game)
+			{
+				if (pos + 1 == actual_game.list_of_tetrominoes.length)
+					actual_game.list_of_tetrominoes.push(new Tetromino());
+				socket.emit('tetrimino', actual_game.list_of_tetrominoes[pos],
+					actual_game.list_of_tetrominoes[pos + 1]);
+				++pos;
+			}
+		};
+	})();
+
+	function send_data_to_ennemy(info, data)
 	{
-		if (pos + 1 == actual_game.list_of_tetrominoes.length)
-			actual_game.list_of_tetrominoes.push(new Tetromino());
-		socket.emit('tetrimino', actual_game.list_of_tetrominoes[pos],
-			actual_game.list_of_tetrominoes[pos + 1]);
-		++pos;
+		console.log(info);
+		if (actual_game && actual_game.running)
+		{
+			if (actual_game.player2)
+			{
+				if (actual_game.player2 === socket)
+					actual_game.player1.socket.emit(info, data);
+				else
+					actual_game.player2.socket.emit(info, data);
+			}
+		}
 	};
 
-	socket.on('start', function(){
-		if (actual_game.player1.id === socket.id && actual_game.player2)
-			actual_game.player2.emit('start');
-		send_tetrimino();
+	socket.on('dead', function() {
+		send_data_to_ennemy('won');
 	});
 
-	socket.on('disconnect', function(){
+	socket.on('malus', function (malus) {
+		send_data_to_ennemy('malus', malus);
+		});
+
+	socket.on('new_tetrimino', function(spectre, malus) {
+		send_data_to_ennemy('spectre', spectre);
+		if (actual_game && actual_game.running)
+			send_tetrimino();
+	});
+
+	socket.on('start', function() {
+		//secure for p1 ?
+		if (actual_game && !actual_game.running)
+		{
+			actual_game.running = true;
+			if (actual_game.player1.id === socket.id && actual_game.player2)
+				actual_game.player2.emit('start');
+			send_tetrimino();
+		}
+	});
+
+	socket.on('disconnect', function() {
 		if (actual_game)
 		{
 			if (actual_game.player2 === undefined)
@@ -136,6 +193,8 @@ io.on('connection', function(socket){
 			{
 				actual_game.player1 = actual_game.player2;
 				actual_game.player2 = undefined;
+				if (actual_game.player1)
+					actual_game.player1.emit('info_response', 'host');
 			}
 		}
 		console.log(`user disconnected ${socket.id}`);

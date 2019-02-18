@@ -1,17 +1,38 @@
 hello world
 
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
 var socket = io();
 
 console.log(socket.id);
 socket.on('connect', () => {console.log(`this is connect ${socket.id}`)})
-socket.emit('info', 'room', 'player1');
+socket.emit('info', 'room2', 'player2');
+/*socket.emit('info', 'room1', 'player2');
+socket.emit('info', 'room1', 'player2');
+socket.emit('info', 'room1', 'player3');
+socket.emit('info', 'room2', 'player1');
+socket.emit('info', 'room3', 'player1');*/
 socket.on('datatest', (data) => {console.log(data)});
 socket.on("info_response", (i) => 
 		{
-			console.log(i);
-			socket.emit('start');
+			console.log(`info_response ${i}`);
 		});
-socket.on('tetrimino', (data) => {console.log(data);});
+socket.on('won', () => {console.log('I WON YOHOOOO')});
+socket.on('tetrimino', (data) => {
+	console.log(data);
+//	socket.emit('new_tetrimino', 2);
+});
+
+
+function hello(){
+	socket.emit('start');
+	socket.emit('malus', 3);
+	socket.emit('new_tetrimino', []);
+	socket.emit('dead');
+};
+
 </script>
+
+
+<button onclick="hello()"> yo</div>
