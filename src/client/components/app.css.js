@@ -1,5 +1,5 @@
 
-export const divStyle = {
+export const appStyle = {
 		display: 'flex',
 		flexFlow: 'row wrap',
 		alignItems: 'stretch',
@@ -14,11 +14,6 @@ export const headerStyle = {
 export const infoOppStyle = {
 		width: '50%',
 		backgroundColor: 'blue'
-};
-
-export const nextShape = {
-		width: '15%',
-		backgroundColor: 'red'
 };
 
 export const footerStyle = {
