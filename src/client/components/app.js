@@ -19,7 +19,6 @@ const App = () => (
 				<div style={Styles.nextShape} > Next Shape </div>
 				<Board list={list} />
 				<Spectre />
-				<div style={Styles.footerStyle} > Footer </div>
 		</div>
 );
 
