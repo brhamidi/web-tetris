@@ -1,13 +1,13 @@
 import React from 'react';
-
 import { List } from 'immutable';
+import { boardStyle } from './board.css';
 
 const Board = (props) => {
 		const list = props.list;
 
 		return (
-				<div>
-						<p> Board </p>
+				<div style={boardStyle} >
+						Board
 				</div>
 		);
 }

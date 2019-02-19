@@ -1,8 +1,9 @@
 import React from 'react';
+import { spectreStyle } from './spectre.css';
 
 const Spectre = () => (
-		<div>
-				<p> Spectre not implem .. </p>
+		<div style={spectreStyle} >
+				Spectre
 		</div>
 );
 
