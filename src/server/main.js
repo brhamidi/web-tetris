@@ -113,7 +113,7 @@ io.on('connection', function(socket){
 			{
 				actual_game = game;
 				game.player2 = new Player(socket, player);
-				socket.emit('info_response', 'scnd');
+				socket.emit('info_response', 'player2');
 			}
 		}
 		else
@@ -146,10 +146,16 @@ io.on('connection', function(socket){
 		{
 			if (actual_game.player2)
 			{
-				if (actual_game.player2 === socket)
+				if (actual_game.player2.socket === socket)
+				{
+					console.log("send to p1");
 					actual_game.player1.socket.emit(info, data);
+				}
 				else
+				{
+					console.log("send to p2");
 					actual_game.player2.socket.emit(info, data);
+				}
 			}
 		}
 	};
@@ -158,11 +164,8 @@ io.on('connection', function(socket){
 		send_data_to_ennemy('won');
 	});
 
-	socket.on('malus', function (malus) {
-		send_data_to_ennemy('malus', malus);
-		});
-
 	socket.on('new_tetrimino', function(spectre, malus) {
+		send_data_to_ennemy('malus', malus);
 		send_data_to_ennemy('spectre', spectre);
 		if (actual_game && actual_game.running)
 			send_tetrimino();
@@ -173,9 +176,8 @@ io.on('connection', function(socket){
 		if (actual_game && !actual_game.running)
 		{
 			actual_game.running = true;
-			if (actual_game.player1.id === socket.id && actual_game.player2)
-				actual_game.player2.emit('start');
-			send_tetrimino();
+			if (actual_game.player1.socket.id === socket.id && actual_game.player2)
+				actual_game.player2.socket.emit('start');
 		}
 	});
 
@@ -194,7 +196,7 @@ io.on('connection', function(socket){
 				actual_game.player1 = actual_game.player2;
 				actual_game.player2 = undefined;
 				if (actual_game.player1)
-					actual_game.player1.emit('info_response', 'host');
+					actual_game.player1.socket.emit('info_response', 'host');
 			}
 		}
 		console.log(`user disconnected ${socket.id}`);

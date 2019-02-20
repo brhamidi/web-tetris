@@ -5,25 +5,68 @@ hello world
 <script>
 var socket = io();
 
-console.log(socket.id);
-socket.on('connect', () => {console.log(`this is connect ${socket.id}`)})
-socket.emit('info', 'room2', 'player2');
-/*socket.emit('info', 'room1', 'player2');
-socket.emit('info', 'room1', 'player2');
-socket.emit('info', 'room1', 'player3');
-socket.emit('info', 'room2', 'player1');
-socket.emit('info', 'room3', 'player1');*/
-socket.on('datatest', (data) => {console.log(data)});
-socket.on("info_response", (i) => 
+const url = window.location.hash.slice(1);
+
+const split1 = url.split(']');
+
+const key_event = new KeyboardEvent('jesaispas');
+
+function gaming()
+{
+	socket.emit('new_tetrimino');
+}
+
+function press_enter(event)
+{
+	console.log(event.code);
+	if (event.code == "Enter")
+	{
+		window.removeEventListener("keydown", press_enter);
+		socket.emit('start');
+		gaming();
+	}
+}
+
+socket.on("info_response", (ir) =>
 		{
-			console.log(`info_response ${i}`);
+			if (ir === 'host')
+			{
+				window.addEventListener("keydown", press_enter);
+			}
+			else if (ir == 'player2')
+			{
+				console.log('player2');
+				socket.on('start', gaming);
+			}
 		});
-socket.on('won', () => {console.log('I WON YOHOOOO')});
+
+
+if (split1[1] == '' && split1[2] == undefined)
+{
+	const split2 = split1[0].split('[');
+	if (split2[2] == undefined && split2[0] && split2[1])
+		socket.emit('info', split2[0], split2[1]);
+	else
+		console.log("error");
+}
+else
+	console.log("Error ");
+
+if (window.location.hash.slice(1))
+{
+	console.log(`'${window.location.hash.slice(1)}'`);
+}
+
+socket.on('won', () => {console.log('I WON')});
 socket.on('tetrimino', (data) => {
 	console.log(data);
-//	socket.emit('new_tetrimino', 2);
+	//	socket.emit('new_tetrimino', 2);
 });
 
+
+console.log(socket.id);
+
+socket.on('datatest', (data) => {console.log(data)});
 
 function hello(){
 	socket.emit('start');
