@@ -1,14 +1,13 @@
 import React from 'react';
 
-import Board from './board';
 import Score from './score';
 import Spectre from './spectre';
 import NextShape from './nextShape';
+import BoardContainer from '../containers/BoardContainer';
+
 
 import { List } from 'immutable';
 import * as Styles from './app.css';
-
-const list = List().set(19, undefined).map(e => List().set(9, undefined));
 
 const App = () => (
 		<div style={Styles.appStyle} >
@@ -18,7 +17,7 @@ const App = () => (
 				<Score />
 				<div style={Styles.infoOppStyle} > Info opponent </div>
 				<NextShape index={1} />
-				<Board list={list} />
+				<BoardContainer />
 				<Spectre />
 		</div>
 );

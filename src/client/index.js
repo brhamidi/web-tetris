@@ -1,11 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import io from 'socket.io-client';
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
 
-import App from './components/app';
+import App from './components/app'
+import rootReducer from './reducers'
+
+const store = createStore(rootReducer);
+
+store.subscribe(() => console.log(store.getState()));
 
 ReactDOM.render(
-  <App />,
-  document.getElementById('tetris')
+		<Provider store={store}>
+				<App />
+		</Provider>,
+		document.getElementById('tetris')
 );
