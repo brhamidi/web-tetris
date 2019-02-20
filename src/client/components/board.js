@@ -13,12 +13,15 @@ const Board = ({ board, currentShape, shapeDown}) => {
 		return (
 				<div style={Styles.boardStyle} >
 						{tab.map((row, y) => row.map( (elem, x) =>
-								<div key={`${y}${x}`} style={Styles.blockStyle(elem)}
-										onClick={() => shapeDown(currentShape) }>
-								</div>
-								)
-							)}
-						</div>
+								<div
+										key={`${y}${x}`}
+										style={Styles.blockStyle(elem)}
+										onClick={() => shapeDown(currentShape)}
+								>
+										</div>
+						)
+						)}
+				</div>
 		);
 }
 
