@@ -1,6 +1,3 @@
-hello world
-
-
 <script src="/socket.io/socket.io.js"></script>
 <script>
 var socket = io();
@@ -9,7 +6,7 @@ const url = window.location.hash.slice(1);
 
 const split1 = url.split(']');
 
-const key_event = new KeyboardEvent('jesaispas');
+const key_event = new KeyboardEvent('EnterEvent');
 
 function gaming()
 {
@@ -38,6 +35,10 @@ socket.on("info_response", (ir) =>
 				console.log('player2');
 				socket.on('start', gaming);
 			}
+			else if (ir == 'full')
+				console.log('cannot join the game is full');
+			else if (ir == 'started')
+				console.log('cannot join the game has already started');
 		});
 
 
@@ -58,6 +59,8 @@ if (window.location.hash.slice(1))
 }
 
 socket.on('won', () => {console.log('I WON')});
+socket.on('spectre', (s) => {console.log('spectre', s)});
+socket.on('malus', (m) => {console.log('malus', m)});
 socket.on('tetrimino', (data) => {
 	console.log(data);
 	//	socket.emit('new_tetrimino', 2);
@@ -70,8 +73,7 @@ socket.on('datatest', (data) => {console.log(data)});
 
 function hello(){
 	socket.emit('start');
-	socket.emit('malus', 3);
-	socket.emit('new_tetrimino', []);
+	socket.emit('new_tetrimino', [0,1,2,3,4,5,6,7,8,9], 3);
 	socket.emit('dead');
 };
 
