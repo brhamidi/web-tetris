@@ -28,9 +28,13 @@ export const setStatusGame = (status) => ({
 });
 
 const newTetrimino = (socket) => {
-	return dispatch => {
-			console.log('send new tetrimino not implemt');
-	}
+		return dispatch => {
+				socket.on('tetrimino', (curr, next) => {
+						console.log(`curr: ${curr}`);
+						console.log(`next: ${next}`);
+				})
+				socket.emit('new_tetrimino', {}, 0);
+		}
 }
 
 export const OnStart = (socket) => {
@@ -47,10 +51,10 @@ export const startGame = (socket) => {
 				const press_enter = (event) => {
 						if (event.code == "Enter")
 						{
-								dispatch(setStatusGame(GameStatus.RUNNING));
-								dispatch(newTetrimino(socket));
 								window.removeEventListener("keydown", press_enter);
 								socket.emit('start');
+								dispatch(setStatusGame(GameStatus.RUNNING));
+								return dispatch(newTetrimino(socket));
 						}
 				}
 				window.addEventListener("keydown", press_enter);
