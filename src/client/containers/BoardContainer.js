@@ -2,7 +2,8 @@ import { connect } from 'react-redux'
 import { shapeDown } from '../actions'
 import Board from '../components/board'
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
+		player: ownProps.player,
 		board: state.board,
 		currentShape: state.currentShape
 })
