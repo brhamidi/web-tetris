@@ -69,7 +69,10 @@ class App extends React.Component {
 										Info opponent: {this.props.info}
 								</div>
 								<NextShape index={1} />
-								<BoardContainer player={this.props.info} />
+								<BoardContainer
+										player={this.props.info}
+										socket = {socket}
+								/>
 								<Spectre />
 						</div>
 				);
