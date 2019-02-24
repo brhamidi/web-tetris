@@ -39,7 +39,6 @@ class App extends React.Component {
 						if (split2[2] == undefined && split2[0] && split2[1]) {
 								const room = split2[0];
 								const player = split2[1];
-								console.log(`room ${room} player: ${player}`);
 								return () => dispatch(setInfo(socket, room, player));
 						}
 						else

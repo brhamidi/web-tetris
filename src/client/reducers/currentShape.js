@@ -1,6 +1,6 @@
 const initialState = {
 		pos: { x: 4, y: 0 },
-		color: 'green',
+		color: 'white',
 		shape: [
 				{x: 0, y: 0},
 				{x: 0, y: 1},
@@ -9,18 +9,16 @@ const initialState = {
 		]
 };
 
-const currentShape = (shape = undefined, action) => {
-		if (typeof shape === 'undefined')
-				return initialState;
-		if (shape === null)
-				return initialState;
+const currentShape = (shape = initialState, action) => {
 		switch (action.type) {
 				case 'SHAPE_DOWN':
 						return Object.assign(
 								{},
 								shape,
-								{pos : { x: shape.pos.x, y: shape.pos.y + 1 }}
+								{pos : { x: shape.pos.x, y: shape.pos.y }}
 						)
+				case 'SET_SHAPE':
+						return action.shape;
 				default:
 						return shape
 		}

@@ -10,7 +10,6 @@ const info = (info) => ({
 		info
 });
 
-
 export const setInfo = (socket, room, player) => {
 		return dispatch => {
 				socket.on('info_response', (msg => {
@@ -27,11 +26,21 @@ export const setStatusGame = (status) => ({
 		status
 });
 
+const setCurrShape = (shape) => ({
+		type: 'SET_SHAPE',
+		shape: {
+				pos: { x: shape.x, y: 0 },
+				color: shape.color,
+				shape: shape.shape
+		}
+})
+
 const newTetrimino = (socket) => {
 		return dispatch => {
 				socket.on('tetrimino', (curr, next) => {
 						console.log(`curr: ${curr}`);
 						console.log(`next: ${next}`);
+						dispatch(setCurrShape(curr));
 				})
 				socket.emit('new_tetrimino', {}, 0);
 		}
