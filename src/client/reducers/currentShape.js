@@ -15,7 +15,7 @@ const currentShape = (shape = initialState, action) => {
 						return Object.assign(
 								{},
 								shape,
-								{pos : { x: shape.pos.x, y: shape.pos.y }}
+								{pos : { x: shape.pos.x, y: shape.pos.y + 1}}
 						)
 				case 'SET_SHAPE':
 						return action.shape;
