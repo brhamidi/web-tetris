@@ -33,19 +33,16 @@ class App extends React.Component {
 		getInfo(dispatch) {
 				const url = window.location.hash.slice(1);
 				const split1 = url.split(']');
-				if (split1[1] == '' && split1[2] == undefined)
-				{
+				if (split1[1] == '' && split1[2] == undefined) {
 						const split2 = split1[0].split('[');
 						if (split2[2] == undefined && split2[0] && split2[1]) {
 								const room = split2[0];
 								const player = split2[1];
 								return () => dispatch(setInfo(socket, room, player));
 						}
-						else
-								return () => dispatch(setStatusGame(GameStatus.ERROR));
-				}
-				else
 						return () => dispatch(setStatusGame(GameStatus.ERROR));
+				}
+				return () => dispatch(setStatusGame(GameStatus.ERROR));
 		}
 
 		render() {

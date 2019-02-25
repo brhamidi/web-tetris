@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { shapeDown, startGame, OnStart } from '../actions'
+import { shapeShouldDown, startGame, OnStart } from '../actions'
 import Board from '../components/board'
 
 const mapStateToProps = (state, ownProps) => ({
@@ -10,7 +10,7 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-		shapeDown: shape => dispatch(shapeDown(shape)),
+		shapeShouldDown: (shape, board) => dispatch(shapeShouldDown(shape, board, ownProps.socket)),
 		OnPressEnter: () => dispatch(startGame(ownProps.socket)),
 		OnStart: () => dispatch(OnStart(ownProps.socket))
 })
