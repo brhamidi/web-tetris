@@ -29,7 +29,7 @@ class	Tetromino
 
 		this.shape = tetriminos_list[i];
 		this.color = color[i];
-		this.x = 2 + Math.floor(Math.random() * Math.floor(7));
+		this.x = Math.floor(Math.random() * Math.floor(7));
 	}
 }
 
