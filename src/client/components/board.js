@@ -4,37 +4,55 @@ import * as Styles from './board.css';
 
 import { GameStatus } from '../actions';
 
-const Board = ({ player, board, currentShape, shapeShouldDown, OnPressEnter, status , OnStart}) => {
-		const reducer = (acc, currValue) => {
-				const y = currValue.y + currentShape.pos.y;
-				const x = currValue.x + currentShape.pos.x;
-				return acc.setIn([y, x], currentShape.color);
+class Board extends React.Component {
+		constructor(props) {
+				super(props);
+				this.reducerBoard = this.reducerBoard.bind(this);
 		}
-		const tab = currentShape.shape.reduce(reducer, board);
 
-		if (status == GameStatus.BEGINNING) {
-				if ( player === 'host') {
-						OnPressEnter();
-						return (<p style={Styles.boardStyle} > press enter </p>);
-				}
-				else {
-						OnStart();
-						return (<p style={Styles.boardStyle} > waiting host </p>);
+		componentDidMount() {
+				const { OnPressEnter, OnStart, loadInitialEvent } = this.props;
+
+				loadInitialEvent();
+				if (this.props.status == GameStatus.BEGINNING) {
+						if ( this.props.player === 'host')
+								OnPressEnter();
+						else
+								OnStart();
 				}
 		}
-		return (
-				<div style={Styles.boardStyle} >
-						{tab.map((row, y) => row.map( (elem, x) =>
-								<div
-										key={`${y}${x}`}
-										style={Styles.blockStyle(elem)}
-										onClick={() => shapeShouldDown(currentShape, board)}
-								>
+
+		reducerBoard(acc, currValue) {
+				const y = currValue.y + this.props.currentShape.pos.y;
+				const x = currValue.x + this.props.currentShape.pos.x;
+				return acc.setIn([y, x], this.props.currentShape.color);
+		}
+
+		render() {
+				const {player, board, currentShape, shapeShouldDown, status } = this.props;
+				const tab = currentShape.shape.reduce(this.reducerBoard, board);
+
+				if (status == GameStatus.BEGINNING) {
+						if ( player === 'host')
+								return (<p style={Styles.boardStyle} > press enter </p>);
+						else
+								return (<p style={Styles.boardStyle} > waiting host </p>);
+				}
+				return (
+						<div style={Styles.boardStyle} >
+								{tab.map((row, y) => row.map( (elem, x) =>
+										<div
+												key={`${y}${x}`}
+												style={Styles.blockStyle(elem)}
+												onClick={() => shapeShouldDown(currentShape, board)}
+										>
+												</div>
+								)
+								)}
 										</div>
-						)
-						)}
-								</div>
-		)
+				)
+
+		}
 }
 
 export default Board;

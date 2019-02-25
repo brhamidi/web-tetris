@@ -26,8 +26,10 @@ const socket = io.connect("http://localhost:3000");
 class App extends React.Component {
 		constructor(props) {
 				super(props);
-				const initialDispatch = this.getInfo(this.props.dispatch);
-				initialDispatch(socket);
+		}
+
+		componentDidMount() {
+				this.getInfo(this.props.dispatch)()
 		}
 
 		getInfo(dispatch) {

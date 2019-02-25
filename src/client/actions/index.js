@@ -1,56 +1,58 @@
 import { List } from 'immutable';
 
 export const GameStatus = {
-	ERROR: 'ERROR',
-	RUNNING: 'RUNNING',
-	LOADING: 'LOADING',
-	BEGINNING: 'BEGINNING'
+		ERROR: 'ERROR',
+		RUNNING: 'RUNNING',
+		LOADING: 'LOADING',
+		BEGINNING: 'BEGINNING'
 };
 
 const info = (info) => ({
-	type: 'INFO',
-	info
+		type: 'INFO',
+		info
 });
 
 export const setInfo = (socket, room, player) => {
-	return dispatch => {
-		socket.on('info_response', (msg => {
-			console.log(`receive info: ${msg}`);
-			dispatch(info(msg));
-			dispatch(setStatusGame(GameStatus.BEGINNING));
-		}));
-		socket.emit('info', room, player);
-	}
+		return dispatch => {
+				socket.on('info_response', (msg => {
+						dispatch(info(msg));
+						dispatch(setStatusGame(GameStatus.BEGINNING));
+				}));
+				socket.emit('info', room, player);
+		}
 };
 
 export const setStatusGame = (status) => ({
-	type: 'STATUS_GAME',
-	status
+		type: 'STATUS_GAME',
+		status
 });
 
 const setCurrShape = (shape) => ({
-	type: 'SET_SHAPE',
-	shape: {
-		pos: { x: shape.x, y: 0 },
-		color: shape.color,
-		shape: shape.shape
-	}
+		type: 'SET_SHAPE',
+		shape: {
+				pos: { x: shape.x, y: 0 },
+				color: shape.color,
+				shape: shape.shape
+		}
 })
 
-//TODO remove socket.on here to fix multiple unless SET_SHAPE action
-
 const newTetrimino = (socket) => {
-	return dispatch => {
-		socket.on('tetrimino', (curr, next) => {
-				dispatch(setCurrShape(curr));
-		})
-		socket.emit('new_tetrimino', {}, 0);
-	}
+		return dispatch => {
+				socket.emit('new_tetrimino', {}, 0);
+		}
+}
+
+export const OnTetrimino = (socket) => {
+		return dispatch => {
+				socket.on('tetrimino', (curr, next) => {
+						dispatch(setCurrShape(curr));
+				})
+		}
 }
 
 const shapeDown = shape => ({
-	type: 'SHAPE_DOWN',
-	shape
+		type: 'SHAPE_DOWN',
+		shape
 })
 
 const canDown = (shape, board) => {
@@ -85,25 +87,25 @@ export const shapeShouldDown = (shape, board, socket) => {
 }
 
 export const OnStart = (socket) => {
-	return dispatch => {
-		socket.on('start', () => {
-			dispatch(setStatusGame(GameStatus.RUNNING));
-			dispatch(newTetrimino(socket));
-		});
-	};
+		return dispatch => {
+				socket.on('start', () => {
+						dispatch(setStatusGame(GameStatus.RUNNING));
+						dispatch(newTetrimino(socket));
+				});
+		};
 };
 
 export const startGame = (socket) => {
-	return dispatch => {
-		const press_enter = (event) => {
-			if (event.code == "Enter")
-			{
-				window.removeEventListener("keydown", press_enter);
-				socket.emit('start');
-				dispatch(setStatusGame(GameStatus.RUNNING));
-				return dispatch(newTetrimino(socket));
-			}
+		return dispatch => {
+				const press_enter = (event) => {
+						if (event.code == "Enter")
+						{
+								window.removeEventListener("keydown", press_enter);
+								socket.emit('start');
+								dispatch(setStatusGame(GameStatus.RUNNING));
+								return dispatch(newTetrimino(socket));
+						}
+				}
+				window.addEventListener("keydown", press_enter);
 		}
-		window.addEventListener("keydown", press_enter);
-	}
 }
