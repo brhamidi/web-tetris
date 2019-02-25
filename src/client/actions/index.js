@@ -37,11 +37,12 @@ const setCurrShape = (shape) => ({
 	}
 })
 
+//TODO remove socket.on here to fix multiple unless SET_SHAPE action
 
 const newTetrimino = (socket) => {
 	return dispatch => {
 		socket.on('tetrimino', (curr, next) => {
-			dispatch(setCurrShape(curr));
+				dispatch(setCurrShape(curr));
 		})
 		socket.emit('new_tetrimino', {}, 0);
 	}
