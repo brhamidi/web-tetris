@@ -9,11 +9,17 @@ const mapStateToProps = (state, ownProps) => ({
 		currentShape: state.currentShape
 })
 
+const getOnstart = (dispatch, socket, info) => {
+		if (info === 'host')
+				dispatch(startGame(socket));
+		else
+				dispatch(OnStart(socket));
+}
+
 const mapDispatchToProps = (dispatch, ownProps) => ({
 		loadInitialEvent: () => dispatch(OnTetrimino(ownProps.socket)),
-		shapeShouldDown: (shape, board) => dispatch(shapeShouldDown(shape, board, ownProps.socket)),
-		OnPressEnter: () => dispatch(startGame(ownProps.socket)),
-		OnStart: () => dispatch(OnStart(ownProps.socket))
+		shapeShouldDown: () => dispatch(shapeShouldDown(ownProps.socket)),
+		OnStart: () => getOnstart(dispatch, ownProps.socket, ownProps.player)
 })
 
 export default connect(

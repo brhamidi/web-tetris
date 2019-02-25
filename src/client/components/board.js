@@ -11,15 +11,10 @@ class Board extends React.Component {
 		}
 
 		componentDidMount() {
-				const { OnPressEnter, OnStart, loadInitialEvent } = this.props;
+				const { loadInitialEvent } = this.props;
 
 				loadInitialEvent();
-				if (this.props.status == GameStatus.BEGINNING) {
-						if ( this.props.player === 'host')
-								OnPressEnter();
-						else
-								OnStart();
-				}
+				this.props.OnStart();
 		}
 
 		reducerBoard(acc, currValue) {
@@ -44,7 +39,7 @@ class Board extends React.Component {
 										<div
 												key={`${y}${x}`}
 												style={Styles.blockStyle(elem)}
-												onClick={() => shapeShouldDown(currentShape, board)}
+												onClick={() => shapeShouldDown()}
 										>
 												</div>
 								)

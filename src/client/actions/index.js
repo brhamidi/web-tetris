@@ -36,12 +36,6 @@ const setCurrShape = (shape) => ({
 		}
 })
 
-const newTetrimino = (socket) => {
-		return dispatch => {
-				socket.emit('new_tetrimino', {}, 0);
-		}
-}
-
 export const OnTetrimino = (socket) => {
 		return dispatch => {
 				socket.on('tetrimino', (curr, next) => {
@@ -50,9 +44,8 @@ export const OnTetrimino = (socket) => {
 		}
 }
 
-const shapeDown = shape => ({
-		type: 'SHAPE_DOWN',
-		shape
+const shapeDown = () => ({
+		type: 'SHAPE_DOWN'
 })
 
 const canDown = (shape, board) => {
@@ -70,19 +63,34 @@ const canDown = (shape, board) => {
 		}
 }
 
+const newTetrimino = (socket) => {
+		return dispatch => {
+				socket.emit('new_tetrimino', {}, 0);
+		}
+}
+
 const mergeCurrShape = (shape) => ({
 		type: 'MERGE_SHAPE',
 		shape
 })
 
-export const shapeShouldDown = (shape, board, socket) => {
-		return dispatch => {
-				if (canDown(shape, board))
-						dispatch(shapeDown(shape));
+export const shapeShouldDown = (socket) => {
+		return (dispatch, getState) => {
+				const {currentShape, board} = getState();
+
+				if (canDown(currentShape, board))
+						dispatch(shapeDown());
 				else {
-						dispatch(mergeCurrShape(shape));
+						dispatch(mergeCurrShape(currentShape));
 						return dispatch(newTetrimino(socket));
 				}
+		}
+}
+
+const startFall = (socket) => {
+		return dispatch => {
+				setInterval(() => dispatch(shapeShouldDown(socket)), 200);
+				return dispatch(newTetrimino(socket));
 		}
 }
 
@@ -90,7 +98,7 @@ export const OnStart = (socket) => {
 		return dispatch => {
 				socket.on('start', () => {
 						dispatch(setStatusGame(GameStatus.RUNNING));
-						dispatch(newTetrimino(socket));
+							return dispatch(startFall(socket))
 				});
 		};
 };
@@ -103,7 +111,7 @@ export const startGame = (socket) => {
 								window.removeEventListener("keydown", press_enter);
 								socket.emit('start');
 								dispatch(setStatusGame(GameStatus.RUNNING));
-								return dispatch(newTetrimino(socket));
+								return dispatch(startFall(socket))
 						}
 				}
 				window.addEventListener("keydown", press_enter);
