@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Score from '../components/score';
-import Spectre from '../components/spectre';
+import SpectreContainer from '../containers/SpectreContainer';
 import NextShape from '../components/nextShape';
 import BoardContainer from './BoardContainer';
 
@@ -71,7 +71,7 @@ class App extends React.Component {
 										player={this.props.info}
 										socket = {socket}
 								/>
-								<Spectre />
+								<SpectreContainer />
 						</div>
 				);
 		}

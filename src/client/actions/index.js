@@ -7,6 +7,11 @@ export const GameStatus = {
 		BEGINNING: 'BEGINNING'
 };
 
+const updateSpectre = (spectre) => ({
+		type: 'UPDATE_SPECTRE',
+		spectre
+});
+
 const info = (info) => ({
 		type: 'INFO',
 		info
@@ -38,6 +43,9 @@ const setCurrShape = (shape) => ({
 
 export const OnTetrimino = (socket) => {
 		return dispatch => {
+				socket.on('spectre', (spectre) => {
+						dispatch(updateSpectre(spectre));
+				})
 				socket.on('tetrimino', (curr, next) => {
 						dispatch(setCurrShape(curr));
 				})
@@ -64,8 +72,12 @@ const canDown = (shape, board) => {
 }
 
 const newTetrimino = (socket) => {
-		return dispatch => {
-				socket.emit('new_tetrimino', {}, 0);
+		return (dispatch, getState) => {
+				const { board } = getState();
+				// TODO calculate new spectre from curr board
+				const init = List().set(9, 0).map(e => 7);
+
+				socket.emit('new_tetrimino', init, 0);
 		}
 }
 
@@ -89,7 +101,7 @@ export const shapeShouldDown = (socket) => {
 
 const startFall = (socket) => {
 		return dispatch => {
-				setInterval(() => dispatch(shapeShouldDown(socket)), 200);
+				setInterval(() => dispatch(shapeShouldDown(socket)), 1000);
 				return dispatch(newTetrimino(socket));
 		}
 }
