@@ -34,11 +34,7 @@ export const setStatusGame = (status) => ({
 
 const setCurrShape = (shape) => ({
 		type: 'SET_SHAPE',
-		shape: {
-				pos: { x: shape.x, y: 0 },
-				color: shape.color,
-				shape: shape.shape
-		}
+		shape
 })
 
 export const OnTetrimino = (socket) => {
@@ -52,8 +48,21 @@ export const OnTetrimino = (socket) => {
 		}
 }
 
+export const shapeRight = (board) => ({
+	type: 'SHAPE_RIGHT',
+	board
+})
+export const shapeLeft = (board) => ({
+	type: 'SHAPE_LEFT',
+	board
+})
+export const shapeRotate = (board) => ({
+	type: 'SHAPE_ROTATE',
+	board
+})
+
 const shapeDown = () => ({
-		type: 'SHAPE_DOWN'
+	type: 'SHAPE_DOWN'
 })
 
 const canDown = (shape, board) => {
@@ -91,7 +100,7 @@ export const shapeShouldDown = (socket) => {
 				const {currentShape, board} = getState();
 
 				if (canDown(currentShape, board))
-						dispatch(shapeDown());
+						dispatch(shapeDown(board));
 				else {
 						dispatch(mergeCurrShape(currentShape));
 						return dispatch(newTetrimino(socket));
