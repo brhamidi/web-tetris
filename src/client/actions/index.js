@@ -7,6 +7,9 @@ export const GameStatus = {
 		BEGINNING: 'BEGINNING'
 };
 
+export const updateShape = (shape, posx, posy) => {
+		return Object.assign({}, shape, { pos: { x: posx + shape.pos.x, y: shape.pos.y + posy } })
+}
 const updateSpectre = (spectre) => ({
 		type: 'UPDATE_SPECTRE',
 		spectre
@@ -34,11 +37,30 @@ export const setStatusGame = (status) => ({
 
 const setCurrShape = (shape) => ({
 		type: 'SET_SHAPE',
-		shape: {
-				pos: { x: shape.x, y: 0 },
-				color: shape.color,
-				shape: shape.shape
+		shape
+})
+
+export const OnTetrimino = (socket) => {
+		return dispatch => {
+				socket.on('spectre', (spectre) => {
+						dispatch(updateSpectre(spectre));
+				})
+				socket.on('tetrimino', (curr, next) => {
+						dispatch(setCurrShape(curr));
+				})
 		}
+}
+
+const shapeRight = () => ({
+		type: 'SHAPE_RIGHT'
+})
+
+const shapeLeft = () => ({
+		type: 'SHAPE_LEFT'
+})
+
+const shapeRotate = () => ({
+		type: 'SHAPE_ROTATE'
 })
 
 const shapeDown = () => ({
@@ -80,7 +102,7 @@ export const shapeShouldDown = (socket) => {
 				const {currentShape, board} = getState();
 
 				if (canDown(currentShape, board))
-						dispatch(shapeDown());
+						dispatch(shapeDown(board));
 				else {
 						dispatch(mergeCurrShape(currentShape));
 						return dispatch(newTetrimino(socket));
@@ -95,27 +117,72 @@ const startFall = (socket) => {
 		}
 }
 
+const canPut = (shape, board) => {
+		const shapeValue = shape.shape.map(({x, y}) => {
+				return {x: x + shape.pos.x, y: shape.pos.y + y};
+		})
+
+		console.log(shape);
+		console.log(shapeValue);
+		if (shapeValue.filter(({x, y}) => x < 0 || x > 9 || y < 0 || y > 19)
+				.length === 0)
+		{
+				const boardValue = shape.shape.map(({x, y}) => {
+						return board.get(y).get(x);
+				})
+				if (boardValue.filter(e => e !== undefined).length > 0)
+						return false;
+				return true;
+		}
+		return false;
+}
+
 const OnEvent = (socket) => {
-		return dispatch => {
+		return (dispatch, getState) => {
 				socket.on('spectre', (spectre) => {
 						dispatch(updateSpectre(spectre));
 				})
 				socket.on('tetrimino', (curr, next) => {
 						dispatch(setCurrShape(curr));
 				})
-				const handler = (event) => {
+				socket.on('won', () => {
+						console.log('i won');
+				})
+				socket.on('malus', (n) => {
+						console.log(`Malus -> ${n}`);
+				})
+				const handler = (event, getState) => {
+						const { currentShape, board } = getState();
+						const shape = currentShape;
+
 						if (event.code == "Space")
 								console.log('Dispatch chute shape');
-						if (event.code == "ArrowUp")
-								console.log('Dispatch Rotate Action');
-						if (event.code == "ArrowDown")
-								console.log('Dispatch shapeDown');
+						if (event.code == "ArrowUp") {
+								const newShape = Object.assign(
+										{},
+										shape,
+										{
+												shape: shape.shape.map(e => ({
+														x: -e.y + shape.len - 1,
+														y: e.x
+												})) 
+										} )
+								if (canPut(newShape, board))
+										dispatch(shapeRotate());
+						}
+						if (event.code == "ArrowDown") {
+								event.preventDefault();
+								if (canPut(updateShape(shape, 0, 1), board))
+										dispatch(shapeDown());
+						}
 						if (event.code == "ArrowLeft")
-								console.log('Dispatch Shape left');
+								if (canPut(updateShape(shape, -1, 0), board))
+										dispatch(shapeLeft());
 						if (event.code == "ArrowRight")
-								console.log('Dispatch Shape right');
+								if (canPut(updateShape(shape, 1, 0), board))
+										dispatch(shapeRight());
 				}
-				window.addEventListener("keydown", handler);
+				window.addEventListener("keydown", (e) => handler(e, getState));
 				return dispatch(startFall(socket))
 		}
 }
@@ -124,7 +191,7 @@ export const OnStart = (socket) => {
 		return dispatch => {
 				socket.on('start', () => {
 						dispatch(setStatusGame(GameStatus.RUNNING));
-							return dispatch(OnEvent(socket))
+						return dispatch(OnEvent(socket))
 				});
 		};
 };
