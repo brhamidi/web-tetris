@@ -4,6 +4,8 @@ export const GameStatus = {
 		ERROR: 'ERROR',
 		RUNNING: 'RUNNING',
 		LOADING: 'LOADING',
+		WON: 'WON',
+		LOOSE: 'LOOSE',
 		BEGINNING: 'BEGINNING'
 };
 
@@ -39,17 +41,6 @@ const setCurrShape = (shape) => ({
 		type: 'SET_SHAPE',
 		shape
 })
-
-export const OnTetrimino = (socket) => {
-		return dispatch => {
-				socket.on('spectre', (spectre) => {
-						dispatch(updateSpectre(spectre));
-				})
-				socket.on('tetrimino', (curr, next) => {
-						dispatch(setCurrShape(curr));
-				})
-		}
-}
 
 const shapeRight = () => ({
 		type: 'SHAPE_RIGHT'
@@ -216,17 +207,26 @@ const OnEvent = (socket) => {
 						console.log('i won');
 				})
 				socket.on('malus', (n) => {
-						console.log(`Malus -> ${n}`);
 						dispatch(addMalus(n))
 				})
 				return dispatch(OnPress(socket));
 		}
 }
 
+export const OnCloseBoard = (socket) => {
+		return dispatch => {
+				socket.removeAllListeners("spectre");
+				socket.removeAllListeners("tetrimino");
+				socket.removeAllListeners("won");
+				socket.removeAllListeners("malus");
+		};
+}
+
 export const OnStart = (socket) => {
 		return dispatch => {
 				socket.on('start', () => {
 						dispatch(setStatusGame(GameStatus.RUNNING));
+						socket.removeAllListeners("start");
 						return dispatch(OnEvent(socket))
 				});
 		};

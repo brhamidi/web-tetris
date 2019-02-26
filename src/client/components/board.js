@@ -14,6 +14,9 @@ class Board extends React.Component {
 				this.props.OnStart();
 		}
 
+		componentWillUnmount() {
+				this.props.OnClose();
+		}
 		reducerBoard(acc, currValue) {
 				const y = currValue.y + this.props.currentShape.pos.y;
 				const x = currValue.x + this.props.currentShape.pos.x;
@@ -30,6 +33,10 @@ class Board extends React.Component {
 						else
 								return (<p style={Styles.boardStyle} > waiting host </p>);
 				}
+				if (status == GameStatus.WON)
+						return (<p> I WON </p>)
+				if (status == GameStatus.LOOSE)
+						return (<p> I LOOSE </p>)
 				return (
 						<div style={Styles.boardStyle} >
 								{tab.map((row, y) => row.map( (elem, x) =>
