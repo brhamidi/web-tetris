@@ -82,14 +82,39 @@ const canDown = (shape, board) => {
 		}
 }
 
-const newTetrimino = (socket) => {
-		return (dispatch, getState) => {
-				const { board } = getState();
-				// TODO calculate new spectre from curr board
-				const init = List().set(9, 0).map(e => 7);
+const calculateMalus = (board, shape) => {
+	const lineY = shape.shape.reduce((acc, curr) => {
+		if (acc.includes(curr.y + shape.pos.y) === true)
+			return acc;
+		else
+			return acc.push(curr.y + shape.pos.y);
+	}, List())
+		.map(e => ({ y: e, line: board.get(e)}) );
 
-				socket.emit('new_tetrimino', init, 0);
+	return lineY
+		.filter( ({ y, line }) => line.includes(undefined) === false)
+		.map(e => e.y);
+
+};
+
+const destroyLine = (tabY) => ({
+	type: 'DESTROY',
+	tabY
+})
+
+const newTetrimino = (socket) => {
+	return (dispatch, getState) => {
+		const { board, currentShape } = getState();
+
+		const init = List().set(9, 0).map(e => 4);
+		const malus = calculateMalus(board, currentShape);
+		const spectre = {}; //TODO calculate
+
+		if (malus.size > 0) {
+			dispatch(destroyLine(malus));
 		}
+		socket.emit('new_tetrimino', init, malus.size);
+	}
 }
 
 const mergeCurrShape = (shape) => ({
@@ -104,8 +129,8 @@ export const shapeShouldDown = (socket) => {
 				if (canDown(currentShape, board))
 						dispatch(shapeDown(board));
 				else {
-						dispatch(mergeCurrShape(currentShape));
-						return dispatch(newTetrimino(socket));
+					dispatch(mergeCurrShape(currentShape));
+					return dispatch(newTetrimino(socket));
 				}
 		}
 }
