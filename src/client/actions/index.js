@@ -107,13 +107,14 @@ const newTetrimino = (socket) => {
 		const { board, currentShape } = getState();
 
 		const init = List().set(9, 0).map(e => 4);
-		const malus = calculateMalus(board, currentShape);
+		const destroy = calculateMalus(board, currentShape);
 		const spectre = {}; //TODO calculate
 
-		if (malus.size > 0) {
-			dispatch(destroyLine(malus));
+		if (destroy.size > 0) {
+			dispatch(destroyLine(destroy));
 		}
-		socket.emit('new_tetrimino', init, malus.size);
+		const malus = destroy.size > 0 ? destroy.size - 1 : 0;
+		socket.emit('new_tetrimino', init, malus);
 	}
 }
 
@@ -160,20 +161,8 @@ const canPut = (shape, board) => {
 		return false;
 }
 
-const OnEvent = (socket) => {
+const OnPress = (socket) => {
 		return (dispatch, getState) => {
-				socket.on('spectre', (spectre) => {
-						dispatch(updateSpectre(spectre));
-				})
-				socket.on('tetrimino', (curr, next) => {
-						dispatch(setCurrShape(curr));
-				})
-				socket.on('won', () => {
-						console.log('i won');
-				})
-				socket.on('malus', (n) => {
-						console.log(`Malus -> ${n}`);
-				})
 				const handler = (event, getState) => {
 						const { currentShape, board } = getState();
 						const shape = currentShape;
@@ -207,6 +196,30 @@ const OnEvent = (socket) => {
 				}
 				window.addEventListener("keydown", (e) => handler(e, getState));
 				return dispatch(startFall(socket))
+		}
+}
+
+const addMalus = (n) => ({
+		type: 'MALUS',
+		n
+})
+
+const OnEvent = (socket) => {
+		return (dispatch, getState) => {
+				socket.on('spectre', (spectre) => {
+						dispatch(updateSpectre(spectre));
+				})
+				socket.on('tetrimino', (curr, next) => {
+						dispatch(setCurrShape(curr));
+				})
+				socket.on('won', () => {
+						console.log('i won');
+				})
+				socket.on('malus', (n) => {
+						console.log(`Malus -> ${n}`);
+						dispatch(addMalus(n))
+				})
+				return dispatch(OnPress(socket));
 		}
 }
 

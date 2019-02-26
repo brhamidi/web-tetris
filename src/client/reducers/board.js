@@ -5,6 +5,13 @@ const emptyBoard =
 
 const board = (board = emptyBoard, action) => {
 		switch (action.type) {
+				case 'MALUS':
+						const f = (board, n) => {
+								if (n === 0)
+									return board;
+								return f(board.delete(0).insert(19, List().set(9, 0).map(e => 'black')), n-1);
+						}
+						return f(board, action.n);
 				case 'DESTROY':
 						const newTab = action.tabY.reduce((acc, curr) => {
 								return acc.delete(curr).insert(0, List().set(9, undefined));

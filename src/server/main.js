@@ -123,7 +123,7 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('new_tetrimino', function(spectre, malus) {
-		send_data_to_ennemy('malus', malus);
+			if (malus > 0) send_data_to_ennemy('malus', malus);
 		send_data_to_ennemy('spectre', spectre);
 		if (actual_game && actual_game.running)
 			send_tetrimino();
