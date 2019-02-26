@@ -41,17 +41,6 @@ const setCurrShape = (shape) => ({
 		}
 })
 
-export const OnTetrimino = (socket) => {
-		return dispatch => {
-				socket.on('spectre', (spectre) => {
-						dispatch(updateSpectre(spectre));
-				})
-				socket.on('tetrimino', (curr, next) => {
-						dispatch(setCurrShape(curr));
-				})
-		}
-}
-
 const shapeDown = () => ({
 		type: 'SHAPE_DOWN'
 })
@@ -106,11 +95,36 @@ const startFall = (socket) => {
 		}
 }
 
+const OnEvent = (socket) => {
+		return dispatch => {
+				socket.on('spectre', (spectre) => {
+						dispatch(updateSpectre(spectre));
+				})
+				socket.on('tetrimino', (curr, next) => {
+						dispatch(setCurrShape(curr));
+				})
+				const handler = (event) => {
+						if (event.code == "Space")
+								console.log('Dispatch chute shape');
+						if (event.code == "ArrowUp")
+								console.log('Dispatch Rotate Action');
+						if (event.code == "ArrowDown")
+								console.log('Dispatch shapeDown');
+						if (event.code == "ArrowLeft")
+								console.log('Dispatch Shape left');
+						if (event.code == "ArrowRight")
+								console.log('Dispatch Shape right');
+				}
+				window.addEventListener("keydown", handler);
+				return dispatch(startFall(socket))
+		}
+}
+
 export const OnStart = (socket) => {
 		return dispatch => {
 				socket.on('start', () => {
 						dispatch(setStatusGame(GameStatus.RUNNING));
-							return dispatch(startFall(socket))
+							return dispatch(OnEvent(socket))
 				});
 		};
 };
@@ -123,7 +137,7 @@ export const startGame = (socket) => {
 								window.removeEventListener("keydown", press_enter);
 								socket.emit('start');
 								dispatch(setStatusGame(GameStatus.RUNNING));
-								return dispatch(startFall(socket))
+								return dispatch(OnEvent(socket))
 						}
 				}
 				window.addEventListener("keydown", press_enter);
