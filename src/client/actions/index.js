@@ -122,12 +122,10 @@ const canPut = (shape, board) => {
 				return {x: x + shape.pos.x, y: shape.pos.y + y};
 		})
 
-		console.log(shape);
-		console.log(shapeValue);
 		if (shapeValue.filter(({x, y}) => x < 0 || x > 9 || y < 0 || y > 19)
 				.length === 0)
 		{
-				const boardValue = shape.shape.map(({x, y}) => {
+				const boardValue = shapeValue.map(({x, y}) => {
 						return board.get(y).get(x);
 				})
 				if (boardValue.filter(e => e !== undefined).length > 0)
