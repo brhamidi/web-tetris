@@ -25,7 +25,6 @@ class Board extends React.Component {
 
 	render() {
 		const {player, board, currentShape, status } = this.props;
-		const tab = currentShape.shape.reduce(this.reducerBoard, board);
 
 		if (status == GameStatus.BEGINNING) {
 			if ( player === 'host')
@@ -34,9 +33,11 @@ class Board extends React.Component {
 				return (<p style={Styles.boardStyle} > waiting host </p>);
 		}
 		if (status == GameStatus.WON)
-			return (<p> I WON </p>)
+			return (<p style={Styles.boardStyle} > I WON </p>)
 		if (status == GameStatus.LOOSE)
-			return (<p> I LOOSE </p>)
+			return (<p style={Styles.boardStyle}> I LOOSE </p>)
+
+		const tab = currentShape.shape.reduce(this.reducerBoard, board);
 		return (
 			<div style={Styles.boardStyle} >
 				{tab.map((row, y) => row.map( (elem, x) =>
