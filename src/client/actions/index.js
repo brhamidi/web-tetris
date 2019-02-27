@@ -12,9 +12,15 @@ export const GameStatus = {
 export const updateShape = (shape, posx, posy) => {
 	return Object.assign({}, shape, { pos: { x: posx + shape.pos.x, y: shape.pos.y + posy } })
 }
+
 const updateSpectre = (spectre) => ({
 	type: 'UPDATE_SPECTRE',
 	spectre
+});
+
+const updateScore = (score) => ({
+	type: 'UPDATE_SCORE',
+	score
 });
 
 const info = (info) => ({
@@ -107,7 +113,7 @@ const calculateSpectrum = (board) =>
 
 const newTetrimino = (socket) => {
 	return (dispatch, getState) => {
-		const { board, currentShape } = getState();
+		const { board, currentShape} = getState();
 
 		const destroy = calculateMalus(board, currentShape);
 		const spectre = calculateSpectrum(board);
@@ -116,6 +122,7 @@ const newTetrimino = (socket) => {
 			dispatch(destroyLine(destroy));
 		}
 		const malus = destroy.size > 0 ? destroy.size - 1 : 0;
+		dispatch(updateScore(destroy.size));
 		socket.emit('new_tetrimino', spectre, malus);
 	}
 }
