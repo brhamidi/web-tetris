@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Score from '../components/score';
+import ScoreContainer from '../containers/scoreContainer';
 import SpectreContainer from '../containers/SpectreContainer';
 import NextShapeContainer from './NextShapeContainer';
 import BoardContainer from './BoardContainer';
@@ -62,7 +62,7 @@ class App extends React.Component {
 								<div style={Styles.headerStyle} >
 										<h3> tetris </h3>
 								</div>
-								<Score />
+								<ScoreContainer />
 								<div style={Styles.infoOppStyle} >
 										Info opponent: {this.props.info}
 								</div>

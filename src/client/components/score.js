@@ -1,9 +1,11 @@
 import React from 'react';
 import * as Styles from './score.css';
 
-const Score = () => (
+const Score = ({score}) => (
 	<div style={Styles.scoreStyle} >
-		<p> Scoring not implem .. </p>
+
+		<p> Score: {score}</p>
+
 	</div>
 );
 
