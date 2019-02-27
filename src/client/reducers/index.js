@@ -4,11 +4,13 @@ import board from './board';
 import status from './status';
 import info from './info';
 import spectre from './spectre';
+import nextShape from './nextShape';
 
 export default combineReducers({
-		spectre,
-		info,
-		status,
-		board,
-		currentShape
+	nextShape,
+	spectre,
+	info,
+	status,
+	board,
+	currentShape
 })

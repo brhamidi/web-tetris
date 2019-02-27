@@ -2,7 +2,7 @@ import React from 'react';
 
 import Score from '../components/score';
 import SpectreContainer from '../containers/SpectreContainer';
-import NextShape from '../components/nextShape';
+import NextShapeContainer from './NextShapeContainer';
 import BoardContainer from './BoardContainer';
 
 import { setStatusGame, GameStatus, setInfo} from '../actions';
@@ -66,7 +66,7 @@ class App extends React.Component {
 								<div style={Styles.infoOppStyle} >
 										Info opponent: {this.props.info}
 								</div>
-								<NextShape index={1} />
+								<NextShapeContainer />
 								<BoardContainer
 										player={this.props.info}
 										socket = {socket}

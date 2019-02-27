@@ -196,6 +196,11 @@ const addMalus = (n) => ({
 	n
 })
 
+const setNextShape = (shape) => ({
+	type: 'SET_NEXT_SHAPE',
+	shape
+});
+
 const OnEvent = (socket) => {
 	return (dispatch, getState) => {
 		socket.on('spectre', (spectre) => {
@@ -203,6 +208,7 @@ const OnEvent = (socket) => {
 		})
 		socket.on('tetrimino', (curr, next) => {
 			dispatch(setCurrShape(curr));
+			dispatch(setNextShape(next));
 		})
 		socket.on('won', () => {
 			console.log('i won');

@@ -1,10 +1,19 @@
 import React from 'react';
-import { nextShapeStyle } from './nextShape.css';
+import * as Styles from './nextShape.css';
 
-const NextShape = (shapeIndex) => (
-		<div style={nextShapeStyle}>
-				Shape
+const NextShape = ({ shape }) => (
+	<div style={Styles.nextShapeStyle}>
+		<h2 style={Styles.title} > Next Shape </h2>
+		<div style={Styles.boardStyle} >
+			{shape.map((row, y) => row.map( (elem, x) =>
+				<div
+					key={`${y}${x}`}
+					style={Styles.blockStyle(elem)}
+				/>
+			)
+			)}
 		</div>
+	</div>
 );
 
 export default NextShape;
