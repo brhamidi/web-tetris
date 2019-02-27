@@ -1,6 +1,6 @@
 import { List } from 'immutable';
 
-const initialState = List().set(9, 2).map(e => 2);
+const initialState = List().set(9, 2).map(e => 20);
 
 const spectre = (state = initialState, action) => {
 		switch(action.type) {

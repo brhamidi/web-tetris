@@ -12,11 +12,13 @@ export const title = {
 };
 
 export const blockStyle = (elem) => {
+	const borderColor = elem === undefined ? 'black' : 'white';
+
 	return {
-		border: 'solid black 1px',
 		width: '19%',
 		height: '50px',
-		backgroundColor: elem === undefined ? 'white' : elem
+		backgroundColor: elem === undefined ? 'black' : elem,
+		border: `solid ${borderColor} 1px`
 	};
 
 };
