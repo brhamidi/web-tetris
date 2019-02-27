@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ScoreContainer from '../containers/scoreContainer';
+import ScoreContainer from '../containers/ScoreContainer';
 import SpectreContainer from '../containers/SpectreContainer';
 import NextShapeContainer from './NextShapeContainer';
 import BoardContainer from './BoardContainer';
