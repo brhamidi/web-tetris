@@ -93,19 +93,30 @@ const destroyLine = (tabY) => ({
 	tabY
 })
 
+const calculateSpectrum = (board) =>
+{
+	const init = List().set(9, undefined);
+	return (board.reduce((acc, curr, key) => {
+		return (curr.reduce((acc2, curr2, key2) => {
+			if (!acc2.get(key2) && curr2)
+				return acc2.set(key2, key);
+			return acc2;
+		}, acc))
+	}, init)).map((e) => {return (e == undefined) ? 20 : e});
+}
+
 const newTetrimino = (socket) => {
 	return (dispatch, getState) => {
 		const { board, currentShape } = getState();
 
-		const init = List().set(9, 0).map(e => 4);
 		const destroy = calculateMalus(board, currentShape);
-		const spectre = {}; //TODO calculate
+		const spectre = calculateSpectrum(board);
 
 		if (destroy.size > 0) {
 			dispatch(destroyLine(destroy));
 		}
 		const malus = destroy.size > 0 ? destroy.size - 1 : 0;
-		socket.emit('new_tetrimino', init, malus);
+		socket.emit('new_tetrimino', spectre, malus);
 	}
 }
 
