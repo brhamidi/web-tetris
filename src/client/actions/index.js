@@ -125,6 +125,8 @@ const mergeCurrShape = (shape) => ({
 	shape
 })
 
+let timerId; // TODO pass that in state
+
 export const shapeShouldDown = (socket) => {
 	return (dispatch, getState) => {
 		const {currentShape, board} = getState();
@@ -133,14 +135,21 @@ export const shapeShouldDown = (socket) => {
 			dispatch(shapeDown(board));
 		else {
 			dispatch(mergeCurrShape(currentShape));
-			return dispatch(newTetrimino(socket));
+			const { board } = getState();
+			if ((board.get(0).filter(e => e === undefined).size) === 10)
+				return dispatch(newTetrimino(socket));
+			else {
+				clearInterval(timerId);
+				dispatch(setStatusGame(GameStatus.LOOSE));
+				socket.emit('dead');
+			}
 		}
 	}
 }
 
 const startFall = (socket) => {
 	return dispatch => {
-		setInterval(() => dispatch(shapeShouldDown(socket)), 1000);
+		timerId = setInterval(() => dispatch(shapeShouldDown(socket)), 1000);
 		return dispatch(newTetrimino(socket));
 	}
 }
@@ -222,7 +231,8 @@ const OnEvent = (socket) => {
 			dispatch(setNextShape(next));
 		})
 		socket.on('won', () => {
-			console.log('i won');
+			clearInterval(timerId);
+			dispatch(setStatusGame(GameStatus.WON));
 		})
 		socket.on('malus', (n) => {
 			dispatch(addMalus(n))
