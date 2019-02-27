@@ -5,7 +5,6 @@ const initialState = List().set(9, 2).map(e => 2);
 const spectre = (state = initialState, action) => {
 		switch(action.type) {
 			case 'UPDATE_SPECTRE':
-				console.log("SPECTROO", action.spectre);
 						return action.spectre;
 				default:
 						return state;
