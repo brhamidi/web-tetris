@@ -1,10 +1,11 @@
 import React from 'react';
 import * as Styles from './spectre.css';
 
-const Spectre = ({ spectre, mode }) => {
+const Spectre = ({ spectre, mode, OnStart }) => {
 	const elem = spectre.map((v, k) =>
 		(<div style={Styles.blockStyle(v * 5)} key={k}/>) )
 
+	OnStart();
 	if (mode.type === 'solo') {
 		return (
 		<div style={Styles.spectreStyle} >

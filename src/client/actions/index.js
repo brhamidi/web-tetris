@@ -255,6 +255,14 @@ const setNextShape = (shape) => ({
 	shape
 });
 
+export const OnSpectreStart = (socket) => {
+	return dispatch => {
+		socket.on('mode', (mode) => {
+			dispatch(updateMode(mode));
+		})
+	}
+}
+
 const OnEvent = (socket) => {
 	return (dispatch, getState) => {
 		socket.on('spectre', (spectre) => {
@@ -271,9 +279,6 @@ const OnEvent = (socket) => {
 		socket.on('mode', (mode) => {
 			dispatch(updateMode(mode))
 		})
-		socket.on('malus', (n) => {
-			dispatch(addMalus(n))
-		})
 		return dispatch(OnPress(socket));
 	}
 }
@@ -284,7 +289,6 @@ export const OnCloseBoard = (socket) => {
 		socket.removeAllListeners("tetrimino");
 		socket.removeAllListeners("won");
 		socket.removeAllListeners("malus");
-		socket.removeAllListeners("mode");
 	};
 }
 

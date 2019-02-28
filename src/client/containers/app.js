@@ -67,7 +67,7 @@ class App extends React.Component {
 				<BoardContainer
 					player={this.props.info}
 					socket = {socket} />
-				<SpectreContainer />
+				<SpectreContainer socket = {socket} />
 			</div>
 		);
 	}
