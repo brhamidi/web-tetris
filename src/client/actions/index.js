@@ -143,12 +143,11 @@ export const shapeShouldDown = (socket) => {
 	return (dispatch, getState) => {
 		const {currentShape, board} = getState();
 
+		const state = getState();
 		if (canDown(currentShape, board))
 			dispatch(shapeDown(board));
-
-		const state = getState();
-
-		if (!canDown(state.currentShape, state.board)) {
+		else
+		{
 			dispatch(mergeCurrShape(state.currentShape));
 			const { board } = getState();
 			if ((board.get(0).filter(e => e === undefined).size) === 10)
@@ -223,7 +222,8 @@ const OnPress = (socket) => {
 				event.preventDefault();
 				if (canPut(updateShape(shape, 0, 1), board))
 					dispatch(shapeDown());
-				return dispatch(shapeShouldDown(socket))
+				else
+					return dispatch(shapeShouldDown(socket))
 			}
 			if (event.code === "ArrowLeft") {
 				event.preventDefault();
