@@ -170,8 +170,8 @@ io.on('connection', function(socket){
 				if (actual_game.player1)
 					actual_game.player1.socket.emit('info_response', 'host');
 			}
-			if (game.player1)
-				game.player1.socket.emit('mode', {
+			if (actual_game.player1)
+				actual_game.player1.socket.emit('mode', {
 					type: 'solo',
 					meta: { name: undefined }
 				});
