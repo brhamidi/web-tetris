@@ -64,6 +64,11 @@ const shapeDown = () => ({
 	type: 'SHAPE_DOWN'
 })
 
+const shapeBottom = (jump) => ({
+	type: 'SHAPE_BOTTOM',
+	jump
+})
+
 const canDown = (shape, board) => {
 	const tabY = shape.shape.map(pos => pos.y);
 	const tab = tabY.filter(y => y + shape.pos.y >= 19);
@@ -123,7 +128,6 @@ const newTetrimino = (socket) => {
 		const malus = destroy.size > 0 ? destroy.size - 1 : 0;
 		dispatch(updateScore(destroy.size));
 		const spectre = calculateSpectrum(board);
-		console.log(spectre);
 		socket.emit('new_tetrimino', spectre, malus);
 	}
 }
@@ -180,6 +184,12 @@ const canPut = (shape, board) => {
 	return false;
 }
 
+function shapeToBotton (shape, board, y)
+{
+	return (canPut(updateShape(shape, 0, y + 1), board) == true ?
+		shapeToBotton(shape, board, y + 1) : y);
+}
+
 const OnPress = (socket) => {
 	return (dispatch, getState) => {
 		const handler = (event, getState) => {
@@ -187,7 +197,10 @@ const OnPress = (socket) => {
 			const shape = currentShape;
 
 			if (event.code == "Space")
-				console.log('Dispatch chute shape');
+			{
+				event.preventDefault();
+				dispatch(shapeBottom(shapeToBotton(shape, board, 0)));
+			}
 			if (event.code == "ArrowUp") {
 				event.preventDefault();
 				const newShape = Object.assign(
@@ -208,11 +221,17 @@ const OnPress = (socket) => {
 					dispatch(shapeDown());
 			}
 			if (event.code == "ArrowLeft")
+			{
+				event.preventDefault();
 				if (canPut(updateShape(shape, -1, 0), board))
 					dispatch(shapeLeft());
+			}
 			if (event.code == "ArrowRight")
+			{
+				event.preventDefault();
 				if (canPut(updateShape(shape, 1, 0), board))
 					dispatch(shapeRight());
+			}
 		}
 		window.addEventListener("keydown", (e) => handler(e, getState));
 		return dispatch(startFall(socket))
