@@ -80,7 +80,7 @@ io.on('connection', function(socket){
 					type: 'multi',
 					meta: { name: game.player1.name }
 				});
-				game.player2.socket.emit('mode', {
+				game.player1.socket.emit('mode', {
 					type: 'multi',
 					meta: { name: game.player2.name }
 				});
