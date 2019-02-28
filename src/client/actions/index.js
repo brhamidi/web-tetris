@@ -124,9 +124,9 @@ const newTetrimino = (socket) => {
 
 		if (destroy.size > 0) {
 			dispatch(destroyLine(destroy));
+			dispatch(updateScore(destroy.size));
 		}
 		const malus = destroy.size > 0 ? destroy.size - 1 : 0;
-		dispatch(updateScore(destroy.size));
 		const spectre = calculateSpectrum(board);
 		socket.emit('new_tetrimino', spectre, malus);
 	}
@@ -145,8 +145,11 @@ export const shapeShouldDown = (socket) => {
 
 		if (canDown(currentShape, board))
 			dispatch(shapeDown(board));
-		else {
-			dispatch(mergeCurrShape(currentShape));
+
+		const state = getState();
+
+		if (!canDown(state.currentShape, state.board)) {
+			dispatch(mergeCurrShape(state.currentShape));
 			const { board } = getState();
 			if ((board.get(0).filter(e => e === undefined).size) === 10)
 				return dispatch(newTetrimino(socket));
@@ -156,6 +159,7 @@ export const shapeShouldDown = (socket) => {
 				socket.emit('dead');
 			}
 		}
+	
 	}
 }
 
@@ -186,7 +190,7 @@ const canPut = (shape, board) => {
 
 function shapeToBotton (shape, board, y)
 {
-	return (canPut(updateShape(shape, 0, y + 1), board) == true ?
+	return (canPut(updateShape(shape, 0, y + 1), board) === true ?
 		shapeToBotton(shape, board, y + 1) : y);
 }
 
@@ -196,12 +200,12 @@ const OnPress = (socket) => {
 			const { currentShape, board } = getState();
 			const shape = currentShape;
 
-			if (event.code == "Space")
-			{
+			if (event.code === "Space") {
 				event.preventDefault();
 				dispatch(shapeBottom(shapeToBotton(shape, board, 0)));
+				return dispatch(shapeShouldDown(socket))
 			}
-			if (event.code == "ArrowUp") {
+			if (event.code === "ArrowUp") {
 				event.preventDefault();
 				const newShape = Object.assign(
 					{},
@@ -215,19 +219,18 @@ const OnPress = (socket) => {
 				if (canPut(newShape, board))
 					dispatch(shapeRotate());
 			}
-			if (event.code == "ArrowDown") {
+			if (event.code === "ArrowDown") {
 				event.preventDefault();
 				if (canPut(updateShape(shape, 0, 1), board))
 					dispatch(shapeDown());
+				return dispatch(shapeShouldDown(socket))
 			}
-			if (event.code == "ArrowLeft")
-			{
+			if (event.code === "ArrowLeft") {
 				event.preventDefault();
 				if (canPut(updateShape(shape, -1, 0), board))
 					dispatch(shapeLeft());
 			}
-			if (event.code == "ArrowRight")
-			{
+			if (event.code === "ArrowRight") {
 				event.preventDefault();
 				if (canPut(updateShape(shape, 1, 0), board))
 					dispatch(shapeRight());
