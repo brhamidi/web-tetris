@@ -54,6 +54,10 @@ io.on('connection', function(socket){
 			actual_game = new Game(room, new Player(socket, player));
 			list_of_games.push(actual_game);
 			socket.emit('info_response', 'host');
+			socket.emit('mode', {
+				type: 'solo',
+				meta: { name: undefined }
+			})
 		}
 		else if (game.running)
 		{
@@ -72,6 +76,14 @@ io.on('connection', function(socket){
 				actual_game = game;
 				game.player2 = new Player(socket, player);
 				socket.emit('info_response', 'player2');
+				socket.emit('mode', {
+					type: 'multi',
+					meta: { name: game.player1.name }
+				})
+				game.player2.socket.emit('mode', {
+					type: 'multi',
+					meta: { name: game.player2.name }
+				})
 			}
 		}
 		else
@@ -158,6 +170,10 @@ io.on('connection', function(socket){
 				if (actual_game.player1)
 					actual_game.player1.socket.emit('info_response', 'host');
 			}
+			game.player1.socket.emit('mode', {
+				type: 'solo',
+				meta: { name: undefined }
+			})
 		}
 		console.log(`user disconnected ${socket.id}`);
 	});
