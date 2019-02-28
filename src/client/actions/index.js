@@ -13,6 +13,11 @@ export const updateShape = (shape, posx, posy) => {
 	return Object.assign({}, shape, { pos: { x: posx + shape.pos.x, y: shape.pos.y + posy } })
 }
 
+const updateMode = (mode) => ({
+	type: 'SET_MODE',
+	mode
+})
+
 const updateSpectre = (spectre) => ({
 	type: 'UPDATE_SPECTRE',
 	spectre
@@ -143,12 +148,11 @@ export const shapeShouldDown = (socket) => {
 	return (dispatch, getState) => {
 		const {currentShape, board} = getState();
 
-		const state = getState();
 		if (canDown(currentShape, board))
 			dispatch(shapeDown(board));
 		else
 		{
-			dispatch(mergeCurrShape(state.currentShape));
+			dispatch(mergeCurrShape(currentShape));
 			const { board } = getState();
 			if ((board.get(0).filter(e => e === undefined).size) === 10)
 				return dispatch(newTetrimino(socket));
@@ -264,6 +268,9 @@ const OnEvent = (socket) => {
 			clearInterval(timerId);
 			dispatch(setStatusGame(GameStatus.WON));
 		})
+		socket.on('mode', (mode) => {
+			dispatch(updateMode(mode))
+		})
 		socket.on('malus', (n) => {
 			dispatch(addMalus(n))
 		})
@@ -277,6 +284,7 @@ export const OnCloseBoard = (socket) => {
 		socket.removeAllListeners("tetrimino");
 		socket.removeAllListeners("won");
 		socket.removeAllListeners("malus");
+		socket.removeAllListeners("mode");
 	};
 }
 

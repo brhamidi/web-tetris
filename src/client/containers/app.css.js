@@ -12,7 +12,7 @@ export const headerStyle = {
 };
 
 export const infoOppStyle = {
-		width: '50%',
+		width: '25%',
 		backgroundColor: 'blue'
 };
 

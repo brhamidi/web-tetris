@@ -6,8 +6,10 @@ import info from './info';
 import spectre from './spectre';
 import nextShape from './nextShape';
 import score from './score';
+import mode from './mode';
 
 export default combineReducers({
+	mode,
 	nextShape,
 	spectre,
 	info,
