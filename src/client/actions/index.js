@@ -81,9 +81,8 @@ const canDown = (shape, board) => {
 	if (tab.length === 0) {
 		const newValue = shape.shape.map(
 			e => ({x: shape.pos.x + e.x, y: shape.pos.y + 1 + e.y})
-		)
+		).filter(e => e.y >= 0);
 		const colorTab = newValue.map(e => board.get(e.y).get(e.x))
-
 		return colorTab.filter(e => e !== undefined).length > 0 ?
 			false : true;
 	}
@@ -163,7 +162,6 @@ export const shapeShouldDown = (socket) => {
 				socket.emit('dead');
 			}
 		}
-	
 	}
 }
 
@@ -179,11 +177,12 @@ const canPut = (shape, board) => {
 		return {x: x + shape.pos.x, y: shape.pos.y + y};
 	})
 
-	if (shapeValue.filter(({x, y}) => x < 0 || x > 9 || y < 0 || y > 19)
+	if (shapeValue.filter(({x, y}) => x < 0 || x > 9 || y > 19)
 		.length === 0)
 	{
 		const boardValue = shapeValue.map(({x, y}) => {
-			return board.get(y).get(x);
+			if (y >= 0)
+				return board.get(y).get(x);
 		})
 		if (boardValue.filter(e => e !== undefined).length > 0)
 			return false;
@@ -284,8 +283,16 @@ const OnEvent = (socket) => {
 			clearInterval(timerId);
 			dispatch(setStatusGame(GameStatus.WON));
 		})
-		socket.on('mode', (mode) => {
-			dispatch(updateMode(mode))
+		socket.on('malus', (n) => {
+			dispatch(addMalus(n))
+			const { board, currentShape } = getState();
+			if ((board.get(0).filter(e => e === undefined).size) === 10)
+				dispatch(setCurrShape(updateShape(currentShape, 0, n * -1)));
+			else {
+				clearInterval(timerId);
+				dispatch(setStatusGame(GameStatus.LOOSE));
+				socket.emit('dead');
+			}
 		})
 		return dispatch(OnPress(socket));
 	}

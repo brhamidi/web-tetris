@@ -35,7 +35,6 @@ const currentShape = (shape = initialState, action) => {
 				})) }
 			);
 		case 'SHAPE_BOTTOM':
-			console.log('actionjump', action.jump);
 			return updateShape(shape, 0, action.jump);
 		default:
 			return shape

@@ -20,7 +20,9 @@ class Board extends React.Component {
 	reducerBoard(acc, currValue) {
 		const y = currValue.y + this.props.currentShape.pos.y;
 		const x = currValue.x + this.props.currentShape.pos.x;
-		return acc.setIn([y, x], this.props.currentShape.color);
+		if (y >= 0)
+			return acc.setIn([y, x], this.props.currentShape.color);
+		return acc;
 	}
 
 	render() {

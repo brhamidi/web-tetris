@@ -20,7 +20,7 @@ class	Tetromino
 		this.shape = tetriminos_list[i];
 		this.color = color[i];
 		this.len = tetriminos_len[i];
-		this.pos = {x: Math.floor(Math.random() * Math.floor(7)), y: 0};
+		this.pos = {x: Math.floor(Math.random() * Math.floor(7)), y: (tetriminos_len[i] - 1) * -1};
 	}
 }
 
