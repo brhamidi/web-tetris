@@ -276,8 +276,8 @@ const OnEvent = (socket) => {
 			clearInterval(timerId);
 			dispatch(setStatusGame(GameStatus.WON));
 		})
-		socket.on('mode', (mode) => {
-			dispatch(updateMode(mode))
+		socket.on('malus', (n) => {
+			dispatch(addMalus(n))
 		})
 		return dispatch(OnPress(socket));
 	}
