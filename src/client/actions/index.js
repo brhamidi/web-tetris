@@ -133,6 +133,7 @@ const newTetrimino = (socket) => {
 		}
 		const malus = destroy.size > 0 ? destroy.size - 1 : 0;
 		const spectre = calculateSpectrum(board);
+		dispatch(setCurrShape(undefined));
 		socket.emit('new_tetrimino', spectre, malus);
 	}
 }
@@ -203,41 +204,48 @@ const OnPress = (socket) => {
 			const { currentShape, board } = getState();
 			const shape = currentShape;
 
-			if (event.code === "Space") {
-				event.preventDefault();
-				dispatch(shapeBottom(shapeToBotton(shape, board, 0)));
-				return dispatch(shapeShouldDown(socket))
-			}
-			if (event.code === "ArrowUp") {
-				event.preventDefault();
-				const newShape = Object.assign(
-					{},
-					shape,
-					{
-						shape: shape.shape.map(e => ({
-							x: -e.y + shape.len - 1,
-							y: e.x
-						})) 
-					} )
-				if (canPut(newShape, board))
-					dispatch(shapeRotate());
-			}
-			if (event.code === "ArrowDown") {
-				event.preventDefault();
-				if (canPut(updateShape(shape, 0, 1), board))
-					dispatch(shapeDown());
-				else
+			if (currentShape.color != 'white')
+			{
+				if (event.code === "Space") {
+					event.preventDefault();
+					dispatch(shapeBottom(shapeToBotton(shape, board, 0)));
 					return dispatch(shapeShouldDown(socket))
-			}
-			if (event.code === "ArrowLeft") {
-				event.preventDefault();
-				if (canPut(updateShape(shape, -1, 0), board))
-					dispatch(shapeLeft());
-			}
-			if (event.code === "ArrowRight") {
-				event.preventDefault();
-				if (canPut(updateShape(shape, 1, 0), board))
-					dispatch(shapeRight());
+				}
+				if (event.code === "ArrowUp") {
+					event.preventDefault();
+					const newShape = Object.assign(
+						{},
+						shape,
+						{
+							shape: shape.shape.map(e => ({
+								x: -e.y + shape.len - 1,
+								y: e.x
+							})) 
+						} )
+					if (canPut(newShape, board))
+						dispatch(shapeRotate());
+				}
+				if (event.code === "ArrowDown") {
+					event.preventDefault();
+					if (canPut(updateShape(shape, 0, 1), board))
+					{
+						clearInterval(timerId);
+						dispatch(shapeDown());
+						timerId = setInterval(() => dispatch(shapeShouldDown(socket)), 1000);
+					}
+					else
+						return dispatch(shapeShouldDown(socket))
+				}
+				if (event.code === "ArrowLeft") {
+					event.preventDefault();
+					if (canPut(updateShape(shape, -1, 0), board))
+						dispatch(shapeLeft());
+				}
+				if (event.code === "ArrowRight") {
+					event.preventDefault();
+					if (canPut(updateShape(shape, 1, 0), board))
+						dispatch(shapeRight());
+				}
 			}
 		}
 		window.addEventListener("keydown", (e) => handler(e, getState));

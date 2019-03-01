@@ -5,9 +5,9 @@ const initialState = {
 	color: 'white',
 	shape: [
 		{x: 0, y: 0},
-		{x: 0, y: 1},
-		{x: 1, y: 1},
-		{x: 1, y: 2}
+		{x: 0, y: 0},
+		{x: 0, y: 0},
+		{x: 0, y: 0}
 	],
 	len: 2
 };
@@ -17,7 +17,10 @@ const currentShape = (shape = initialState, action) => {
 		case 'SHAPE_DOWN':
 			return updateShape(shape, 0, 1);
 		case 'SET_SHAPE':
-			return action.shape;
+			if (action.shape)
+				return action.shape;
+			else
+				return initialState;
 		case 'SHAPE_RIGHT':
 			return updateShape(shape, 1, 0);
 		case 'SHAPE_LEFT':
