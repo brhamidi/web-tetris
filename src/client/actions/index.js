@@ -34,10 +34,13 @@ const info = (info) => ({
 });
 
 export const setInfo = (socket, room, player) => {
-	return dispatch => {
+	return (dispatch, getState) => {
 		socket.on('info_response', (msg => {
 			dispatch(info(msg));
-			dispatch(setStatusGame(GameStatus.BEGINNING));
+			const { status } = getState();
+			if (status === GameStatus.LOADING) {
+				dispatch(setStatusGame(GameStatus.BEGINNING));
+			}
 		}));
 		socket.emit('info', room, player);
 	}
@@ -95,7 +98,7 @@ const calculateMalus = (board, shape) => {
 		else
 			return acc.push(curr.y + shape.pos.y);
 	}, List())
-	.map(e => ({ y: e, line: board.get(e)}) );
+		.map(e => ({ y: e, line: board.get(e)}) );
 
 	return lineY
 		.filter( ({ y, line }) => line.includes(undefined) === false)
