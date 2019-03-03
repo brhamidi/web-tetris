@@ -10,25 +10,29 @@ export const GameStatus = {
 };
 
 export const updateShape = (shape, posx, posy) => {
-	return Object.assign({}, shape, { pos: { x: posx + shape.pos.x, y: shape.pos.y + posy } })
+	return Object.assign(
+		{},
+		shape,
+		{ pos: { x: posx + shape.pos.x, y: shape.pos.y + posy } }
+	)
 }
 
-const updateMode = (mode) => ({
+export const updateMode = (mode) => ({
 	type: 'SET_MODE',
 	mode
 })
 
-const updateSpectre = (spectre) => ({
+export const updateSpectre = (spectre) => ({
 	type: 'UPDATE_SPECTRE',
 	spectre
 });
 
-const updateScore = (score) => ({
+export const updateScore = (score) => ({
 	type: 'UPDATE_SCORE',
 	score
 });
 
-const info = (info) => ({
+export const info = (info) => ({
 	type: 'INFO',
 	info
 });
@@ -51,33 +55,33 @@ export const setStatusGame = (status) => ({
 	status
 });
 
-const setCurrShape = (shape) => ({
+export const setCurrShape = (shape) => ({
 	type: 'SET_SHAPE',
 	shape
 })
 
-const shapeRight = () => ({
+export const shapeRight = () => ({
 	type: 'SHAPE_RIGHT'
 })
 
-const shapeLeft = () => ({
+export const shapeLeft = () => ({
 	type: 'SHAPE_LEFT'
 })
 
-const shapeRotate = () => ({
+export const shapeRotate = () => ({
 	type: 'SHAPE_ROTATE'
 })
 
-const shapeDown = () => ({
+export const shapeDown = () => ({
 	type: 'SHAPE_DOWN'
 })
 
-const shapeBottom = (jump) => ({
+export const shapeBottom = (jump) => ({
 	type: 'SHAPE_BOTTOM',
 	jump
 })
 
-const canDown = (shape, board) => {
+export const canDown = (shape, board) => {
 	const tabY = shape.shape.map(pos => pos.y);
 	const tab = tabY.filter(y => y + shape.pos.y >= 19);
 
@@ -91,7 +95,7 @@ const canDown = (shape, board) => {
 	}
 }
 
-const calculateMalus = (board, shape) => {
+export const calculateMalus = (board, shape) => {
 	const lineY = shape.shape.reduce((acc, curr) => {
 		if (acc.includes(curr.y + shape.pos.y) === true)
 			return acc;
@@ -106,12 +110,12 @@ const calculateMalus = (board, shape) => {
 
 };
 
-const destroyLine = (tabY) => ({
+export const destroyLine = (tabY) => ({
 	type: 'DESTROY',
 	tabY
 })
 
-const calculateSpectrum = (board) =>
+export const calculateSpectrum = (board) =>
 {
 	const init = List().set(9, undefined);
 	return (board.reduce((acc, curr, key) => {
@@ -123,7 +127,7 @@ const calculateSpectrum = (board) =>
 	}, init)).map((e) => {return (20 - ((e == undefined) ? 20 : e))});
 }
 
-const newTetrimino = (socket) => {
+export const newTetrimino = (socket) => {
 	return (dispatch, getState) => {
 		const { board, currentShape} = getState();
 
@@ -140,7 +144,7 @@ const newTetrimino = (socket) => {
 	}
 }
 
-const mergeCurrShape = (shape) => ({
+export const mergeCurrShape = (shape) => ({
 	type: 'MERGE_SHAPE',
 	shape
 })
@@ -168,14 +172,14 @@ export const shapeShouldDown = (socket) => {
 	}
 }
 
-const startFall = (socket) => {
+export const startFall = (socket) => {
 	return dispatch => {
 		timerId = setInterval(() => dispatch(shapeShouldDown(socket)), 1000);
 		return dispatch(newTetrimino(socket));
 	}
 }
 
-const canPut = (shape, board) => {
+export const canPut = (shape, board) => {
 	const shapeValue = shape.shape.map(({x, y}) => {
 		return {x: x + shape.pos.x, y: shape.pos.y + y};
 	})
@@ -194,13 +198,12 @@ const canPut = (shape, board) => {
 	return false;
 }
 
-function shapeToBotton (shape, board, y)
-{
+export const shapeToBotton = (shape, board, y) => {
 	return (canPut(updateShape(shape, 0, y + 1), board) === true ?
 		shapeToBotton(shape, board, y + 1) : y);
 }
 
-const OnPress = (socket) => {
+export const OnPress = (socket) => {
 	return (dispatch, getState) => {
 		const handler = (event, getState) => {
 			const { currentShape, board } = getState();
@@ -255,12 +258,12 @@ const OnPress = (socket) => {
 	}
 }
 
-const addMalus = (n) => ({
+export const addMalus = (n) => ({
 	type: 'MALUS',
 	n
 })
 
-const setNextShape = (shape) => ({
+export const setNextShape = (shape) => ({
 	type: 'SET_NEXT_SHAPE',
 	shape
 });
@@ -273,7 +276,7 @@ export const OnSpectreStart = (socket) => {
 	}
 }
 
-const OnEvent = (socket) => {
+export const OnEvent = (socket) => {
 	return (dispatch, getState) => {
 		socket.on('spectre', (spectre) => {
 			dispatch(updateSpectre(spectre));
