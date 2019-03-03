@@ -4,7 +4,7 @@
 	"description": "Multiplayer networked web Tetris game",
 	"scripts": {
 		"srv-dev": "nodemon --exec babel-node -w src/server src/server/main.js",
-		"client-dev": "webpack-dev-server",
+		"client-dev": "webpack-dev-server --host 0.0.0.0",
 		"test": "jest --coverage",
 		"jest": {
 			"transform": {

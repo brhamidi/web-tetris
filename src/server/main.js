@@ -1,6 +1,6 @@
 const	app = require('http').createServer(handler)
 const	io = require('socket.io')(app);
-const	hostname = '127.0.0.1';
+const	hostname = '0.0.0.0';
 const	port = 3000;
 const	url = require('url');
 const	fs = require('fs');
@@ -24,7 +24,7 @@ function handler (req, res) {
 	else
 	{
 		res.writeHead(200, {'Content-Type': 'text/html'});
-		fs.readFile('./src/server/index.html', null, function(error, data)
+		fs.readFile(__dirname + '/../../index.html', null, function(error, data)
 			{
 				if (error)
 				{
@@ -33,7 +33,7 @@ function handler (req, res) {
 				}
 				else
 				{
-					res.write(data);
+					res.write(data,  {'Content-Type': 'text/javascript'});
 				}
 				res.end();
 			});
