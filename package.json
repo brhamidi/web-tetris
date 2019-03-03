@@ -5,6 +5,7 @@
 	"scripts": {
 		"srv-dev": "nodemon --exec babel-node -w src/server src/server/main.js",
 		"client-dev": "webpack-dev-server --host 0.0.0.0",
+		"client-prod": "webpack",
 		"coverage": "jest --coverage",
 		"test": "jest",
 		"jest": {
