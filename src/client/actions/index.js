@@ -164,9 +164,9 @@ export const shapeShouldDown = (socket) => {
 			if ((board.get(0).filter(e => e === undefined).size) === 10)
 				return dispatch(newTetrimino(socket));
 			else {
-				clearInterval(timerId);
 				dispatch(setStatusGame(GameStatus.LOOSE));
 				socket.emit('dead');
+				return dispatch(OnCloseBoard(socket));
 			}
 		}
 	}
@@ -202,58 +202,62 @@ export const shapeToBotton = (shape, board, y) => {
 	return (canPut(updateShape(shape, 0, y + 1), board) === true ?
 		shapeToBotton(shape, board, y + 1) : y);
 }
+const handler = (event, getState, socket, dispatch) => {
+	const { currentShape, board } = getState();
+	const shape = currentShape;
 
+	if (currentShape.color != 'white')
+	{
+		if (event.code === "Space") {
+			event.preventDefault();
+			dispatch(shapeBottom(shapeToBotton(shape, board, 0)));
+			return dispatch(shapeShouldDown(socket))
+		}
+		if (event.code === "ArrowUp") {
+			event.preventDefault();
+			const newShape = Object.assign(
+				{},
+				shape,
+				{
+					shape: shape.shape.map(e => ({
+						x: -e.y + shape.len - 1,
+						y: e.x
+					})) 
+				} )
+			if (canPut(newShape, board))
+				dispatch(shapeRotate());
+		}
+		if (event.code === "ArrowDown") {
+			event.preventDefault();
+			if (canPut(updateShape(shape, 0, 1), board))
+			{
+				clearInterval(timerId);
+				dispatch(shapeDown());
+				timerId =
+					setInterval(() => dispatch(shapeShouldDown(socket)), 1000);
+			}
+			else
+				return dispatch(shapeShouldDown(socket))
+		}
+		if (event.code === "ArrowLeft") {
+			event.preventDefault();
+			if (canPut(updateShape(shape, -1, 0), board))
+				dispatch(shapeLeft());
+		}
+		if (event.code === "ArrowRight") {
+			event.preventDefault();
+			if (canPut(updateShape(shape, 1, 0), board))
+				dispatch(shapeRight());
+		}
+	}
+}
+
+let f;
 export const OnPress = (socket) => {
 	return (dispatch, getState) => {
-		const handler = (event, getState) => {
-			const { currentShape, board } = getState();
-			const shape = currentShape;
-
-			if (currentShape.color != 'white')
-			{
-				if (event.code === "Space") {
-					event.preventDefault();
-					dispatch(shapeBottom(shapeToBotton(shape, board, 0)));
-					return dispatch(shapeShouldDown(socket))
-				}
-				if (event.code === "ArrowUp") {
-					event.preventDefault();
-					const newShape = Object.assign(
-						{},
-						shape,
-						{
-							shape: shape.shape.map(e => ({
-								x: -e.y + shape.len - 1,
-								y: e.x
-							})) 
-						} )
-					if (canPut(newShape, board))
-						dispatch(shapeRotate());
-				}
-				if (event.code === "ArrowDown") {
-					event.preventDefault();
-					if (canPut(updateShape(shape, 0, 1), board))
-					{
-						clearInterval(timerId);
-						dispatch(shapeDown());
-						timerId = setInterval(() => dispatch(shapeShouldDown(socket)), 1000);
-					}
-					else
-						return dispatch(shapeShouldDown(socket))
-				}
-				if (event.code === "ArrowLeft") {
-					event.preventDefault();
-					if (canPut(updateShape(shape, -1, 0), board))
-						dispatch(shapeLeft());
-				}
-				if (event.code === "ArrowRight") {
-					event.preventDefault();
-					if (canPut(updateShape(shape, 1, 0), board))
-						dispatch(shapeRight());
-				}
-			}
-		}
-		window.addEventListener("keydown", (e) => handler(e, getState));
+		f = (e) => handler(e, getState, socket, dispatch);
+	
+		window.addEventListener('keydown', f);
 		return dispatch(startFall(socket))
 	}
 }
@@ -286,8 +290,8 @@ export const OnEvent = (socket) => {
 			dispatch(setNextShape(next));
 		})
 		socket.on('won', () => {
-			clearInterval(timerId);
 			dispatch(setStatusGame(GameStatus.WON));
+			return dispatch(OnCloseBoard(socket));
 		})
 		socket.on('malus', (n) => {
 			dispatch(addMalus(n))
@@ -295,21 +299,22 @@ export const OnEvent = (socket) => {
 			if ((board.get(0).filter(e => e === undefined).size) === 10)
 				dispatch(setCurrShape(updateShape(currentShape, 0, n * -1)));
 			else {
-				clearInterval(timerId);
 				dispatch(setStatusGame(GameStatus.LOOSE));
 				socket.emit('dead');
+				return dispatch(OnCloseBoard(socket));
 			}
 		})
 		return dispatch(OnPress(socket));
 	}
 }
-
 export const OnCloseBoard = (socket) => {
-	return dispatch => {
-		socket.removeAllListeners("spectre");
-		socket.removeAllListeners("tetrimino");
-		socket.removeAllListeners("won");
-		socket.removeAllListeners("malus");
+	return (dispatch, getState) => {
+		clearInterval(timerId);
+		socket.removeAllListeners('spectre');
+		socket.removeAllListeners('tetrimino');
+		socket.removeAllListeners('won');
+		socket.removeAllListeners('malus');
+		window.removeEventListener("keydown", f);
 	};
 }
 
@@ -331,6 +336,7 @@ export const startGame = (socket) => {
 				window.removeEventListener("keydown", press_enter);
 				socket.emit('start');
 				dispatch(setStatusGame(GameStatus.RUNNING));
+				socket.removeAllListeners('start');
 				return dispatch(OnEvent(socket))
 			}
 		}
