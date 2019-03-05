@@ -14,6 +14,13 @@ class Board extends React.Component {
 		this.props.OnStart();
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.player === 'player2'
+			&& this.props.player === 'host') {
+			this.props.OnStart();
+		}
+	}
+
 	componentWillUnmount() {
 		this.props.OnClose();
 	}
