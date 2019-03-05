@@ -10,12 +10,12 @@ import rootReducer from './reducers'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootReducer, composeEnhancers(
-		applyMiddleware(ReduxThunk)
+	applyMiddleware(ReduxThunk)
 ));
 
 ReactDOM.render(
-		<Provider store={store}>
-				<App />
-		</Provider>,
-		document.getElementById('tetris')
+	<Provider store={store}>
+		<App />
+	</Provider>,
+	document.getElementById('tetris')
 );

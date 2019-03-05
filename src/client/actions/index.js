@@ -42,7 +42,7 @@ export const setInfo = (socket, room, player) => {
 		socket.on('info_response', (msg => {
 			dispatch(info(msg));
 			const { status } = getState();
-			if (status === GameStatus.LOADING) {
+			if (status !== GameStatus.RUNNING) {
 				dispatch(setStatusGame(GameStatus.BEGINNING));
 			}
 		}));

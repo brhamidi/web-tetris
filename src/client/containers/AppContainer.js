@@ -4,6 +4,7 @@ import ScoreContainer from '../containers/ScoreContainer';
 import SpectreContainer from '../containers/SpectreContainer';
 import NextShapeContainer from './NextShapeContainer';
 import BoardContainer from './BoardContainer';
+import Home from '../components/Home';
 
 import { setStatusGame, GameStatus, setInfo} from '../actions';
 
@@ -23,7 +24,7 @@ const mapStateToProps = state => {
 
 const socket = io.connect("http://localhost:3000");
 
-class App extends React.Component {
+class AppContainer extends React.Component {
 	constructor(props) {
 		super(props);
 	}
@@ -48,29 +49,34 @@ class App extends React.Component {
 	}
 
 	render() {
-		// TODO  a parametric component for error message
-		if (this.props.status == GameStatus.ERROR)
-			return <h2> Error .. </h2>;
-		if (this.props.status == GameStatus.LOADING)
-			return <h2> Loading .. </h2>;
-		if (this.props.info == 'full')
-			return <h2> Session Full </h2>;
-		if (this.props.info == 'started')
-			return <h2> Game still already </h2>;
+		if (this.props.status !== GameStatus.RUNNING &&
+			this.props.status !== GameStatus.BEGINNING)
+			return (
+				<div style={Styles.appStyle} >
+					<div style={Styles.headerStyle} >
+						<h3> web - tetris </h3>
+					</div>
+					<Home
+						status={this.props.status}
+						cb={ (room, player) => { this.props.dispatch(setInfo(socket, room, player)) } }
+					/>
+				</div>
+			);
 		return (
 			<div style={Styles.appStyle} >
 				<div style={Styles.headerStyle} >
-					<h3> tetris </h3>
+					<h3> web - tetris </h3>
 				</div>
 				<ScoreContainer />
 				<NextShapeContainer />
 				<BoardContainer
 					player={this.props.info}
-					socket = {socket} />
-				<SpectreContainer socket = {socket} />
+					socket={socket}
+				/>
+				<SpectreContainer socket={socket} />
 			</div>
 		);
 	}
 }
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps)(AppContainer);
