@@ -94,20 +94,19 @@ io.on('connection', function(socket){
 		console.log(list_of_games);
 	});
 
-	var send_tetrimino = (function() {
-		var	pos = 0;
-
-		return function() {
-			if (actual_game)
-			{
-				if (pos + 1 == actual_game.list_of_tetrominoes.length)
-					actual_game.list_of_tetrominoes.push(new Tetromino());
-				socket.emit('tetrimino', actual_game.list_of_tetrominoes[pos],
-					actual_game.list_of_tetrominoes[pos + 1]);
-				++pos;
-			}
-		};
-	})();
+	const send_tetrimino = () =>
+	{
+		const player = actual_game.player1.socket === socket ?
+			actual_game.player1 : actual_game.player2;
+		if (actual_game)
+		{
+			if (player.pos + 1 == actual_game.list_of_tetrominoes.length)
+				actual_game.list_of_tetrominoes.push(new Tetromino());
+			socket.emit('tetrimino', actual_game.list_of_tetrominoes[player.pos],
+				actual_game.list_of_tetrominoes[player.pos + 1]);
+			++(player.pos);
+		}
+	};
 
 	function send_data_to_ennemy(info, data)
 	{
@@ -133,6 +132,9 @@ io.on('connection', function(socket){
 	socket.on('dead', function() {
 		send_data_to_ennemy('won');
 		actual_game.running = false;
+		actual_game.player1.pos = 0;
+		actual_game.player2.pos = 0;
+		actual_game.list_of_tetrominoes = [new Tetromino()];
 	});
 
 	socket.on('new_tetrimino', function(spectre, malus) {

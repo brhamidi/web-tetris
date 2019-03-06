@@ -4,6 +4,7 @@ class	Player
 	{
 		this.socket = socket;
 		this.name = name;
+		this.pos = 0;
 	}
 }
 
