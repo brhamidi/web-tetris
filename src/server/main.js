@@ -133,7 +133,8 @@ io.on('connection', function(socket){
 		send_data_to_ennemy('won');
 		actual_game.running = false;
 		actual_game.player1.pos = 0;
-		actual_game.player2.pos = 0;
+		if (actual_game.player2 !== undefined)
+			actual_game.player2.pos = 0;
 		actual_game.list_of_tetrominoes = [new Tetromino()];
 	});
 
