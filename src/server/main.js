@@ -132,6 +132,7 @@ io.on('connection', function(socket){
 
 	socket.on('dead', function() {
 		send_data_to_ennemy('won');
+		actual_game.running = false;
 	});
 
 	socket.on('new_tetrimino', function(spectre, malus) {

@@ -16,14 +16,17 @@ class Board extends React.Component {
 
 	componentDidUpdate(prevProps) {
 		if (prevProps.player === 'player2'
-			&& this.props.player === 'host') {
+			&& this.props.player === 'host'
+			&& this.props.status === GameStatus.BEGINNING) {
+			this.props.OnStart();
+		}
+		if ((this.props.status === GameStatus.WON
+			|| this.props.status === GameStatus.LOOSE)
+			&& prevProps.status === GameStatus.RUNNING) {
 			this.props.OnStart();
 		}
 	}
 
-	componentWillUnmount() {
-		this.props.OnClose();
-	}
 	reducerBoard(acc, currValue) {
 		const y = currValue.y + this.props.currentShape.pos.y;
 		const x = currValue.x + this.props.currentShape.pos.x;
@@ -35,16 +38,15 @@ class Board extends React.Component {
 	render() {
 		const {player, board, currentShape, status } = this.props;
 
-		if (status == GameStatus.BEGINNING) {
+		if (status === GameStatus.BEGINNING) {
 			if ( player === 'host')
-				return (<p style={Styles.boardStyle} > press enter </p>);
+				return ( <p style={Styles.boardStyle} > press enter </p> );
 			else
 				return (<p style={Styles.boardStyle} > waiting host </p>);
 		}
-		if (status == GameStatus.WON)
-			return (<p style={Styles.boardStyle} > I WON </p>)
-		if (status == GameStatus.LOOSE)
-			return (<p style={Styles.boardStyle}> I LOOSE </p>)
+		if (status === GameStatus.WON || status === GameStatus.LOOSE) {
+			return ( <p style={Styles.boardStyle} > I {status} </p> )
+		}
 
 		const tab = currentShape.shape.reduce(this.reducerBoard, board);
 		return (
@@ -54,10 +56,10 @@ class Board extends React.Component {
 						key={`${y}${x}`}
 						style={Styles.blockStyle(elem)}
 					>
-						</div>
+					</div>
 								)
 								)}
-										</div>
+			</div>
 				)
 
 		}

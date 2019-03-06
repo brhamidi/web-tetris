@@ -24,10 +24,8 @@ class Home extends React.Component {
 	render() {
 		return (
 			<div>
+				<span> {this.props.status} </span>
 				<h3> Home page </h3>
-				{status !== GameStatus.IDLE &&
-						<div> {status} </div>
-				}
 				<form onSubmit={this.handleSubmit}>
 				room
 				<input type="text" value={this.state.room} onChange={(e) => this.handleChange(e, 'room')} />

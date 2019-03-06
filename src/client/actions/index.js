@@ -307,6 +307,15 @@ export const OnEvent = (socket) => {
 		return dispatch(OnPress(socket));
 	}
 }
+
+const reset_board = {
+	type: 'RESET_BOARD'
+};
+
+const reset_next_shape = {
+	type: 'RESET_NEXT_SHAPE'
+};
+
 export const OnCloseBoard = (socket) => {
 	return (dispatch, getState) => {
 		clearInterval(timerId);
@@ -315,6 +324,8 @@ export const OnCloseBoard = (socket) => {
 		socket.removeAllListeners('won');
 		socket.removeAllListeners('malus');
 		window.removeEventListener("keydown", f);
+		dispatch(reset_board);
+		dispatch(reset_next_shape);
 	};
 }
 

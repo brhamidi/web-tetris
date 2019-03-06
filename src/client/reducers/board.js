@@ -5,6 +5,8 @@ const emptyBoard =
 
 const board = (board = emptyBoard, action) => {
 	switch (action.type) {
+		case 'RESET_BOARD':
+			return emptyBoard;
 		case 'MALUS':
 			const f = (board, n) => {
 				if (n === 0)

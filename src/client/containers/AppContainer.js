@@ -49,19 +49,24 @@ class AppContainer extends React.Component {
 	}
 
 	render() {
-		if (this.props.status !== GameStatus.RUNNING &&
-			this.props.status !== GameStatus.BEGINNING)
+		if (this.props.status === GameStatus.ERROR
+			|| this.props.status === GameStatus.LOADING
+			|| (this.props.info !== 'host' && this.props.info !== 'player2')) {
+			const curr_status = this.props.status === GameStatus.ERROR
+				|| this.props.status === GameStatus.LOADING ?
+				this.props.status : this.props.info;
 			return (
 				<div style={Styles.appStyle} >
 					<div style={Styles.headerStyle} >
 						<h3> web - tetris </h3>
 					</div>
 					<Home
-						status={this.props.status}
+						status={curr_status}
 						cb={ (room, player) => { this.props.dispatch(setInfo(socket, room, player)) } }
 					/>
 				</div>
 			);
+		}
 		return (
 			<div style={Styles.appStyle} >
 				<div style={Styles.headerStyle} >
