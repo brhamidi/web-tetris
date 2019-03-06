@@ -17,7 +17,10 @@ class Board extends React.Component {
 	componentDidUpdate(prevProps) {
 		if (prevProps.player === 'player2'
 			&& this.props.player === 'host'
-			&& this.props.status === GameStatus.BEGINNING) {
+			&& (this.props.status === GameStatus.BEGINNING
+				|| this.props.status === GameStatus.WON
+				|| this.props.status === GameStatus.LOOSE
+			)) {
 			this.props.OnStart();
 		}
 		if ((this.props.status === GameStatus.WON
@@ -54,7 +57,7 @@ class Board extends React.Component {
 			const y = currValue.y + prevShape.pos.y;
 			const x = currValue.x + prevShape.pos.x;
 			if (y >= 0)
-				return acc.setIn([y, x], );
+				return acc.setIn([y, x], 'black');
 			return acc;
 		}, board);
 		const finaltab = currentShape.shape.reduce(this.reducerBoard, tab);
@@ -64,7 +67,8 @@ class Board extends React.Component {
 				{finaltab.map((row, y) => row.map( (elem, x) =>
 					<div
 						key={`${y}${x}`}
-						style={Styles.blockStyle(elem)}
+						style={Styles.blockStyle(elem === 'black' ?
+							currentShape.color : elem, elem === 'black' ? true : false)}
 					>
 					</div>
 					)
