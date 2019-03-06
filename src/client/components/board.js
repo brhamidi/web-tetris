@@ -2,7 +2,7 @@ import React from 'react';
 import { List } from 'immutable';
 import * as Styles from './board.css';
 
-import { GameStatus } from '../actions';
+import { GameStatus, shapeToBotton, updateShape } from '../actions';
 
 class Board extends React.Component {
 	constructor(props) {
@@ -48,17 +48,27 @@ class Board extends React.Component {
 			return ( <p style={Styles.boardStyle} > I {status} </p> )
 		}
 
-		const tab = currentShape.shape.reduce(this.reducerBoard, board);
+		const prevShapeY = shapeToBotton(currentShape, board, 0);
+		const prevShape = updateShape(currentShape, 0, prevShapeY);
+		const tab = prevShape.shape.reduce((acc, currValue) => {
+			const y = currValue.y + prevShape.pos.y;
+			const x = currValue.x + prevShape.pos.x;
+			if (y >= 0)
+				return acc.setIn([y, x], );
+			return acc;
+		}, board);
+		const finaltab = currentShape.shape.reduce(this.reducerBoard, tab);
+
 		return (
 			<div style={Styles.boardStyle} >
-				{tab.map((row, y) => row.map( (elem, x) =>
+				{finaltab.map((row, y) => row.map( (elem, x) =>
 					<div
 						key={`${y}${x}`}
 						style={Styles.blockStyle(elem)}
 					>
 					</div>
-								)
-								)}
+					)
+				)}
 			</div>
 				)
 
