@@ -66,4 +66,106 @@ describe('action sync', () => {
 		const res = { type: 'SET_NEXT_SHAPE', shape: 42 };
 		expect(actions.setNextShape(42)).toEqual(res);
 	});
+	test('canDown', () =>{
+		const shape = {
+			pos: { x: 4, y: 4 },
+			color: 'orange',
+			shape: [
+				{x: 1, y: 0},
+				{x: 2, y: 0},
+				{x: 3, y: 0},
+				{x: 4, y: 0}
+			],
+			len: 4
+		};
+		const emptyBoard = List().set(19, undefined).map(e => List().set(9, undefined));
+		const filledBoard = List().set(19, undefined).map(e => List().set(9, 'orange').map(e => 'orange'));
+
+		expect(actions.canDown(shape, emptyBoard)).toBe(true);
+		expect(actions.canDown(shape, filledBoard)).toBe(false);
+	});
+	test('update Shape', () => {
+		const shape1 = {
+			pos: { x: 4, y: 4 },
+			color: 'orange',
+			shape: [
+				{x: 1, y: 0},
+				{x: 2, y: 0},
+				{x: 3, y: 0},
+				{x: 4, y: 0}
+			],
+			len: 4
+		};
+		const shape2 = {
+			pos: { x: 3, y: 6 },
+			color: 'orange',
+			shape: [
+				{x: 1, y: 0},
+				{x: 2, y: 0},
+				{x: 3, y: 0},
+				{x: 4, y: 0}
+			],
+			len: 4
+		};
+		expect(actions.updateShape(shape1, -1, 2)).toEqual(shape2);
+	});
+	test('calculate malus', () => {
+		const shape = {
+			pos: { x: 4, y: 4 },
+			color: 'orange',
+			shape: [
+				{x: 1, y: 0},
+				{x: 2, y: 0},
+				{x: 3, y: 0},
+				{x: 4, y: 0}
+			],
+			len: 4
+		};
+		const shape2 = {
+			pos: { x: 4, y: 4 },
+			color: 'orange',
+			shape: [
+				{x: 0, y: 0},
+				{x: 0, y: 1},
+				{x: 1, y: 2},
+				{x: 0, y: 0}
+			],
+			len: 4
+		};
+		const emptyBoard = List().set(19, undefined).map(e => List().set(9, undefined));
+		const filledBoard = List().set(19, undefined).map(e => List().set(9, 'orange').map(e => 'orange'));
+		const emptyLineList = List([]);
+		const lineList = List([4]);
+		const lineList2 = List([4, 5, 6]);
+
+		expect(actions.calculateMalus(emptyBoard, shape)).toEqual(emptyLineList);
+		expect(actions.calculateMalus(filledBoard, shape)).toEqual(lineList);
+		expect(actions.calculateMalus(filledBoard, shape2)).toEqual(lineList2);
+	});
+	test('calculate spectrum', () => {
+		const emptyBoard = List().set(19, undefined).map(e => List().set(9, undefined));
+		const filledBoard = List().set(19, undefined).map(e => List().set(9, 'orange').map(e => 'orange'));
+		const lineList = List([19,19,19,19,19,19,19,19,19,19]);
+		const lineList2 = List([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+
+		expect(actions.calculateSpectrum(filledBoard)).toEqual(lineList);
+		expect(actions.calculateSpectrum(emptyBoard)).toEqual(lineList2);
+	});
+	test('can put', () => {
+		const shape = {
+			pos: { x: 4, y: 4 },
+			color: 'orange',
+			shape: [
+				{x: 1, y: 0},
+				{x: 2, y: 0},
+				{x: 3, y: 0},
+				{x: 4, y: 0}
+			],
+			len: 4
+		};
+		const emptyBoard = List().set(19, undefined).map(e => List().set(9, undefined));
+		const filledBoard = List().set(19, undefined).map(e => List().set(9, 'orange').map(e => 'orange'));
+		expect(actions.canPut(shape, emptyBoard)).toBe(true);
+		expect(actions.canPut(shape, filledBoard)).toBe(false);
+	});
 });

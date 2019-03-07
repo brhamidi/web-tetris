@@ -9,7 +9,7 @@ const initialState = {
 		{x: 0, y: 0},
 		{x: 0, y: 0}
 	],
-	len: 2
+	len: 1
 };
 
 const currentShape = (shape = initialState, action) => {

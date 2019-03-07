@@ -107,7 +107,6 @@ export const calculateMalus = (board, shape) => {
 	return lineY
 		.filter( ({ y, line }) => line.includes(undefined) === false)
 		.map(e => e.y);
-
 };
 
 export const destroyLine = (tabY) => ({
