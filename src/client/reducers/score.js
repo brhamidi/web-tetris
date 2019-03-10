@@ -1,5 +1,4 @@
-function calculatePoint(line)
-{
+export const calculatePoint = (line) => {
 	return (line + ((line - 1 > 0) ? calculatePoint(line - 1) : 0))
 };
 
