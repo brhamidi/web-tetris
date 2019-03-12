@@ -1,41 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { GameStatus } from '../actions'
 
-class Home extends React.Component {
-	constructor (props) {
-		super(props);
-		this.state = { room: '', player: '' };
-		this.handleSubmit = this.handleSubmit.bind(this);
-	}
+const Home = ({ status, cb }) => {
+	const [room, setRoom] = useState('');
+	const [player, setPlayer] = useState('');
 
-	handleSubmit(event) {
-		event.preventDefault();
-		if (this.state.room !== '' && this.state.player !== '') {
-			this.props.cb(this.state.room, this.state.player);
-			window.location.hash = `#${this.state.room}[${this.state.player}]`;
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (room != '' && player != ''); {
+			cb(room, player);
+			window.location.hash = `#${room}[${player}]`;
 		}
 	}
 
-
-	handleChange(event, value) {
-		this.setState({[value] : event.target.value});
-	}
-
-	render() {
-		return (
-			<div>
-				<span> {this.props.status} </span>
-				<h3> Home page </h3>
-				<form onSubmit={this.handleSubmit}>
-				room
-				<input type="text" value={this.state.room} onChange={(e) => this.handleChange(e, 'room')} />
-				player
-				<input type="text" value={this.state.player} onChange={(e) => this.handleChange(e, 'player')} />
+	return (
+		<div>
+			{status}
+			<h3> Home Page </h3>
+			<form onSubmit={handleSubmit}>
+				<label> room </label>
+				<input
+					type="text"
+					value={room}
+					onChange={(e) => setRoom(e.target.value)}
+				/>
+				<label> player </label>
+				<input
+					type="text"
+					value={player}
+					onChange={(e) => setPlayer(e.target.value)}
+				/>
 				<input type="submit" value="Submit" />
-				</form>
-			</div>
-		)
-	};
+			</form>
+		</div>
+	)
 }
 
 export default Home;
