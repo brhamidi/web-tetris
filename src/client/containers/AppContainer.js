@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import ScoreContainer from '../containers/ScoreContainer';
 import SpectreContainer from '../containers/SpectreContainer';
@@ -15,27 +15,18 @@ import * as Styles from './app.css';
 
 import io from "socket.io-client";
 
-const mapStateToProps = state => {
-	return {
-		info: state.info,
-		status: state.status
-	}
-}
+const mapStateToProps = state => ({
+	info: state.info,
+	status: state.status
+})
 
 const socket = io.connect("http://localhost:3000");
 
-class AppContainer extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
-	componentDidMount() {
-		this.getInfo(this.props.dispatch)()
-	}
-
-	getInfo(dispatch) {
+const AppContainer = ({ info, status, dispatch }) => {
+	const getInfo = () => {
 		const url = window.location.hash.slice(1);
 		const split1 = url.split(']');
+
 		if (split1[1] == '' && split1[2] == undefined) {
 			const split2 = split1[0].split('[');
 			if (split2[2] == undefined && split2[0] && split2[1]) {
@@ -48,40 +39,41 @@ class AppContainer extends React.Component {
 		return () => dispatch(setStatusGame(GameStatus.ERROR));
 	}
 
-	render() {
-		if (this.props.status === GameStatus.ERROR
-			|| this.props.status === GameStatus.LOADING
-			|| (this.props.info !== 'host' && this.props.info !== 'player2')) {
-			const curr_status = this.props.status === GameStatus.ERROR
-				|| this.props.status === GameStatus.LOADING ?
-				this.props.status : this.props.info;
-			return (
-				<div style={Styles.appStyle} >
-					<div style={Styles.headerStyle} >
-						<h3> web - tetris </h3>
-					</div>
-					<Home
-						status={curr_status}
-						cb={ (room, player) => { this.props.dispatch(setInfo(socket, room, player)) } }
-					/>
-				</div>
-			);
-		}
+	useEffect(() => {
+		console.log('Component did mount AppContainer');
+		getInfo()();
+	}, [])
+
+	if (status === GameStatus.ERROR || status === GameStatus.LOADING || (info !== 'host' && info !== 'player2')) {
+		const curr_status =
+			status === GameStatus.ERROR || status === GameStatus.LOADING ? status : info;
 		return (
 			<div style={Styles.appStyle} >
 				<div style={Styles.headerStyle} >
 					<h3> web - tetris </h3>
 				</div>
-				<ScoreContainer />
-				<NextShapeContainer />
-				<BoardContainer
-					player={this.props.info}
-					socket={socket}
+				<Home
+					status={curr_status}
+					cb={ (room, player) => { dispatch(setInfo(socket, room, player)) } }
 				/>
-				<SpectreContainer socket={socket} />
 			</div>
-		);
+		)
 	}
+	return (
+		<div style={Styles.appStyle} >
+			<div style={Styles.headerStyle} >
+				<h3> web - tetris </h3>
+			</div>
+			<ScoreContainer />
+			<NextShapeContainer />
+			<BoardContainer
+				player={info}
+				socket={socket}
+			/>
+			<SpectreContainer socket={socket} />
+		</div>
+	)
+
 }
 
 export default connect(mapStateToProps)(AppContainer);

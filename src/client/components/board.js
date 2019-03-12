@@ -68,13 +68,13 @@ class Board extends React.Component {
 					<div
 						key={`${y}${x}`}
 						style={Styles.blockStyle(elem === 'black' ?
-							currentShape.color : elem, elem === 'black' ? true : false)}
+							currentShape.color : elem, elem === 'black')}
 					>
 					</div>
 					)
 				)}
 			</div>
-				)
+		)
 
 		}
 }

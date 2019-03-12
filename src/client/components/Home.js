@@ -7,7 +7,7 @@ const Home = ({ status, cb }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (room != '' && player != ''); {
+		if (room !== '' && player !== '') {
 			cb(room, player);
 			window.location.hash = `#${room}[${player}]`;
 		}
