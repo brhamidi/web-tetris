@@ -39,6 +39,9 @@ export const info = (info) => ({
 
 export const setInfo = (socket, room, player) => {
 	return (dispatch, getState) => {
+		socket.on('mode', (mode) => {
+			dispatch(updateMode(mode));
+		})
 		socket.on('info_response', (msg => {
 			dispatch(info(msg));
 			const { status } = getState();
@@ -270,14 +273,6 @@ export const setNextShape = (shape) => ({
 	type: 'SET_NEXT_SHAPE',
 	shape
 });
-
-export const OnSpectreStart = (socket) => {
-	return dispatch => {
-		socket.on('mode', (mode) => {
-			dispatch(updateMode(mode));
-		})
-	}
-}
 
 export const OnEvent = (socket) => {
 	return (dispatch, getState) => {

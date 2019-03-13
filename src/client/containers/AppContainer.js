@@ -40,7 +40,6 @@ const AppContainer = ({ info, status, dispatch }) => {
 	}
 
 	useEffect(() => {
-		console.log('Component did mount AppContainer');
 		getInfo()();
 	}, [])
 
