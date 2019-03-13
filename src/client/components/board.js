@@ -39,7 +39,7 @@ const Board = ({ OnStart, player, status, currentShape, board }) => {
 		const y = currValue.y + prevShape.pos.y;
 		const x = currValue.x + prevShape.pos.x;
 		if (y >= 0)
-			return acc.setIn([y, x], 'black');
+			return acc.setIn([y, x], 'preview');
 		return acc;
 	}, board);
 	const finaltab = currentShape.shape.reduce(reducerBoard, tab);
@@ -49,8 +49,8 @@ const Board = ({ OnStart, player, status, currentShape, board }) => {
 			{finaltab.map((row, y) => row.map( (elem, x) =>
 				<div
 					key={`${y}${x}`}
-					style={Styles.blockStyle(elem === 'black' ?
-						currentShape.color : elem, elem === 'black')}
+					style={Styles.blockStyle(elem === 'preview' ?
+						currentShape.color : elem, elem === 'preview')}
 				>
 				</div>
 			)
