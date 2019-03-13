@@ -1,82 +1,62 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { List } from 'immutable';
 import * as Styles from './board.css';
 
 import { GameStatus, shapeToBotton, updateShape } from '../actions';
 
-class Board extends React.Component {
-	constructor(props) {
-		super(props);
-		this.reducerBoard = this.reducerBoard.bind(this);
-	}
+const Board = ({ OnStart, player, status, currentShape, board }) => {
 
-	componentDidMount() {
-		this.props.OnStart();
-	}
-
-	componentDidUpdate(prevProps) {
-		if (prevProps.player === 'player2'
-			&& this.props.player === 'host'
-			&& (this.props.status === GameStatus.BEGINNING
-				|| this.props.status === GameStatus.WON
-				|| this.props.status === GameStatus.LOOSE
-			)) {
-			this.props.OnStart();
+	useEffect(() => {
+		if (status === GameStatus.WON || status === GameStatus.LOOSE
+			|| status == GameStatus.BEGINNING) {
+			console.log('player change: Board onStart()');
+			OnStart();
 		}
-		if ((this.props.status === GameStatus.WON
-			|| this.props.status === GameStatus.LOOSE)
-			&& prevProps.status === GameStatus.RUNNING) {
-			this.props.OnStart();
-		}
-	}
+	}, [player])
 
-	reducerBoard(acc, currValue) {
-		const y = currValue.y + this.props.currentShape.pos.y;
-		const x = currValue.x + this.props.currentShape.pos.x;
+	useEffect(() => {
+		if (status === GameStatus.WON || status === GameStatus.LOOSE) {
+			console.log('Status change: Board OnStart()');
+			OnStart()
+		}
+	}, [status])
+
+	const reducerBoard = (acc, currValue) => {
+		const y = currValue.y + currentShape.pos.y;
+		const x = currValue.x + currentShape.pos.x;
 		if (y >= 0)
-			return acc.setIn([y, x], this.props.currentShape.color);
+			return acc.setIn([y, x], currentShape.color);
 		return acc;
 	}
+	if (status === GameStatus.BEGINNING)
+		return (<p style={Styles.boardStyle} >{player === 'host' ? 'press enter' : 'waiting host'}</p>);
+	if (status === GameStatus.WON || status === GameStatus.LOOSE)
+		return ( <p style={Styles.boardStyle} > I {status} </p> )
 
-	render() {
-		const {player, board, currentShape, status } = this.props;
+	const prevShapeY = shapeToBotton(currentShape, board, 0);
+	const prevShape = updateShape(currentShape, 0, prevShapeY);
+	const tab = prevShape.shape.reduce((acc, currValue) => {
+		const y = currValue.y + prevShape.pos.y;
+		const x = currValue.x + prevShape.pos.x;
+		if (y >= 0)
+			return acc.setIn([y, x], 'black');
+		return acc;
+	}, board);
+	const finaltab = currentShape.shape.reduce(reducerBoard, tab);
 
-		if (status === GameStatus.BEGINNING) {
-			if ( player === 'host')
-				return ( <p style={Styles.boardStyle} > press enter </p> );
-			else
-				return (<p style={Styles.boardStyle} > waiting host </p>);
-		}
-		if (status === GameStatus.WON || status === GameStatus.LOOSE) {
-			return ( <p style={Styles.boardStyle} > I {status} </p> )
-		}
-
-		const prevShapeY = shapeToBotton(currentShape, board, 0);
-		const prevShape = updateShape(currentShape, 0, prevShapeY);
-		const tab = prevShape.shape.reduce((acc, currValue) => {
-			const y = currValue.y + prevShape.pos.y;
-			const x = currValue.x + prevShape.pos.x;
-			if (y >= 0)
-				return acc.setIn([y, x], 'black');
-			return acc;
-		}, board);
-		const finaltab = currentShape.shape.reduce(this.reducerBoard, tab);
-
-		return (
-			<div style={Styles.boardStyle} >
-				{finaltab.map((row, y) => row.map( (elem, x) =>
-					<div
-						key={`${y}${x}`}
-						style={Styles.blockStyle(elem === 'black' ?
-							currentShape.color : elem, elem === 'black')}
-					>
-					</div>
-					)
-				)}
-			</div>
-		)
-
-		}
+	return (
+		<div style={Styles.boardStyle} >
+			{finaltab.map((row, y) => row.map( (elem, x) =>
+				<div
+					key={`${y}${x}`}
+					style={Styles.blockStyle(elem === 'black' ?
+						currentShape.color : elem, elem === 'black')}
+				>
+				</div>
+			)
+			)}
+		</div>
+	)
 }
 
 export default Board;
