@@ -9,11 +9,13 @@ const	Tetromino = require('./tetromino.js');
 const	Game = require('./game.js');
 var		list_of_games = [];
 
+import {create_room, game_already_running, new_mode, create_info, get_game, get_next_tetriminos, reset_game, ennemy_socket, remove_game, start_game } from './server_functions';
+
 app.listen(port, hostname, () => {
 	console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-function handler (req, res) {
+const handler = (req, res) => {
 	if (req.url != '/')
 	{
 		res.setHeader('Content-Type', 'text/plain');
@@ -38,6 +40,7 @@ function handler (req, res) {
 				res.end();
 			});
 	}
+	return res;
 }
 
 io.on('connection', function(socket){
@@ -45,113 +48,51 @@ io.on('connection', function(socket){
 	var	actual_game = undefined;
 
 	console.log(`a user connected ${socket.id}`);
+	
 	socket.on('info', function(room, player){
+		const game = get_game(room, list_of_games);
+		const info = create_info(socket, room, player, game, actual_game, list_of_games);
 
-		var game = list_of_games.find((game) => {return game.name === room});
-
-		if (game === undefined)
-		{
-			actual_game = new Game(room, new Player(socket, player));
-			list_of_games.push(actual_game);
-			socket.emit('info_response', 'host');
-			socket.emit('mode', {
-				type: 'solo',
-				meta: { name: undefined }
-			});
-		}
-		else if (game.running)
-		{
-			socket.emit('info_response', 'started');
-			console.log('already started');
-		}
-		else if (game.player2 === undefined)
-		{
-			if (game.player1.name === player)
-			{
-				socket.emit('info_response', 'name');
-				console.log('error name already taken for this room');
-			}
-			else
-			{
-				actual_game = game;
-				game.player2 = new Player(socket, player);
-				socket.emit('info_response', 'player2');
-				socket.emit('mode', {
-					type: 'multi',
-					meta: { name: game.player1.name }
-				});
-				game.player1.socket.emit('mode', {
-					type: 'multi',
-					meta: { name: game.player2.name }
-				});
-			}
-		}
-		else
-		{
-			socket.emit('info_response', 'full');
-			console.log('full');
-		}
+		actual_game = info.ag;
+		socket.emit('info_response', info.ir);
+		if (info.mode1)
+			actual_game.player1.socket.emit('mode', info.mode1);
+		if (info.mode2)
+			actual_game.player2.socket.emit('mode', info.mode2);
 		console.log(list_of_games);
 	});
 
-	const send_tetrimino = () =>
-	{
-		const player = actual_game.player1.socket === socket ?
-			actual_game.player1 : actual_game.player2;
-		if (actual_game)
-		{
-			if (player.pos + 1 == actual_game.list_of_tetrominoes.length)
-				actual_game.list_of_tetrominoes.push(new Tetromino());
-			socket.emit('tetrimino', actual_game.list_of_tetrominoes[player.pos],
-				actual_game.list_of_tetrominoes[player.pos + 1]);
-			++(player.pos);
-		}
-	};
-
-	function send_data_to_ennemy(info, data)
-	{
-		console.log(info);
-		if (actual_game && actual_game.running)
-		{
-			if (actual_game.player2)
-			{
-				if (actual_game.player2.socket === socket)
-				{
-					console.log("send to p1");
-					actual_game.player1.socket.emit(info, data);
-				}
-				else
-				{
-					console.log("send to p2");
-					actual_game.player2.socket.emit(info, data);
-				}
-			}
-		}
-	};
-
 	socket.on('dead', function() {
-		send_data_to_ennemy('won');
-		actual_game.running = false;
-		actual_game.player1.pos = 0;
-		if (actual_game.player2 !== undefined)
-			actual_game.player2.pos = 0;
-		actual_game.list_of_tetrominoes = [new Tetromino()];
+		const ennemy = ennemy_socket(actual_game, socket);
+
+		if (ennemy)
+			ennemy.emit('won');
+		reset_game(actual_game);
 	});
 
 	socket.on('new_tetrimino', function(spectre, malus) {
-		if (malus > 0) {
-			send_data_to_ennemy('malus', malus);
+		if (malus > 0)
+		{
+			const ennemy = ennemy_socket(actual_game, socket);
+			if (ennemy)
+				ennemy.emit('malus', malus);
 		}
-		send_data_to_ennemy('spectre', spectre);
+		const ennemy = ennemy_socket(actual_game, socket);
+		if (ennemy)
+			ennemy.emit('spectre', spectre);
 		if (actual_game && actual_game.running)
-			send_tetrimino();
+		{
+			const tetriminos = get_next_tetriminos(actual_game, socket);
+
+			socket.emit('tetrimino', tetriminos.actual, tetriminos.next);
+		}
 	});
 
 	socket.on('start', function() {
 		//secure for p1 only?
 		if (actual_game && !actual_game.running)
 		{
-			actual_game.running = true;
+			start_game(actual_game);
 			if (actual_game.player1.socket.id === socket.id && actual_game.player2)
 				actual_game.player2.socket.emit('start');
 		}
@@ -161,10 +102,7 @@ io.on('connection', function(socket){
 		if (actual_game)
 		{
 			if (actual_game.player2 === undefined)
-			{
-				list_of_games = list_of_games.filter((game) => {
-					return game.name !== actual_game.name});
-			}
+				list_of_games = remove_game(list_of_games, actual_game);
 			else if (socket === actual_game.player2.socket)
 				actual_game.player2 = undefined;
 			else
@@ -175,10 +113,7 @@ io.on('connection', function(socket){
 					actual_game.player1.socket.emit('info_response', 'host');
 			}
 			if (actual_game.player1)
-				actual_game.player1.socket.emit('mode', {
-					type: 'solo',
-					meta: { name: undefined }
-				});
+				actual_game.player1.socket.emit('mode', new_mode('solo', undefined));
 		}
 		console.log(`user disconnected ${socket.id}`);
 	});

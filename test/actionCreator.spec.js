@@ -168,4 +168,24 @@ describe('action sync', () => {
 		expect(actions.canPut(shape, emptyBoard)).toBe(true);
 		expect(actions.canPut(shape, filledBoard)).toBe(false);
 	});
+	test('new tetrimino', () => {
+		const socket = {emit: () => {}};
+		const getState = () => {
+			const board = List().set(19, undefined).map(e => List().set(9, undefined));
+			const currentShape = {
+				pos: { x: 4, y: 4 },
+				color: 'orange',
+				shape: [
+					{x: 1, y: 0},
+					{x: 2, y: 0},
+					{x: 3, y: 0},
+					{x: 4, y: 0}
+				],
+				len: 4
+			};
+			return {currentShape, board};
+		};
+		expect(actions.newTetrimino(socket)(() => {}, getState)).toBeUndefined()
+		;
+	});
 });
