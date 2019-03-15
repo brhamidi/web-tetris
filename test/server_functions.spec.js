@@ -101,6 +101,10 @@ describe('Server Functions', () => {
 		const game = new Game('room', new Player('socket', 'player'));
 		const default_game = new Game('room', new Player('socket', 'player'));
 
+		serverFunction.get_next_tetriminos(game, 'socket');
+		serverFunction.get_next_tetriminos(game, 'socket');
+		expect(serverFunction.reset_game(game)).toEqual(default_game);
+		
 		serverFunction.player2_info('socket2', 'room', 'player2', game);		
 		serverFunction.player2_info('socket2', 'room', 'player2', default_game);		
 		serverFunction.get_next_tetriminos(game, 'socket');
@@ -112,6 +116,8 @@ describe('Server Functions', () => {
 	test('ennemy socket', () => {
 		const game = new Game('room', new Player('socket', 'player'));
 
+		expect(serverFunction.ennemy_socket(undefined, 'socket')).toBe(undefined);
+		expect(serverFunction.ennemy_socket(game, 'socket')).toBe(undefined);
 		serverFunction.start_game(game);
 		expect(serverFunction.ennemy_socket(game, 'socket')).toBe(undefined);
 		serverFunction.player2_info('socket2', 'room', 'player2', game);		
