@@ -74,8 +74,31 @@ afterEach((done) => {
 	done();
 });
 
-describe('Async action', () => {
-	test('setInfo dispatch good sync action', (done) => {
+describe('Async action dispatch good actoin', () => {
+	test('newTetrimino', (done) => {
+		const expectedActions = [
+			actions.setCurrShape(undefined)
+		]
+
+		store.dispatch(actions.newTetrimino(socket));
+		setTimeout(() => {
+			expect(store.getActions()).toEqual(expectedActions);
+			done();
+		}, 100)
+	})
+	test('setInfo - Game is running', (done) => {
+		const expectedActions = [
+			actions.info('host')
+		]
+
+		store = mockStore(Object.assign({}, store.getState(), {status: GameStatus.RUNNING}));
+		store.dispatch(actions.setInfo(socket, 'test', 'test'));
+		setTimeout(() => {
+			expect(store.getActions()).toEqual(expectedActions);
+			done();
+		}, 100)
+	})
+	test('setInfo - Game is beginning', (done) => {
 		const expectedActions = [
 			actions.info('host'),
 			actions.setStatusGame(GameStatus.BEGINNING)
