@@ -1,4 +1,4 @@
-const initialState = {
+export const initialState = {
 	type: 'solo',
 	meta : { name: undefined }
 };

@@ -2,6 +2,90 @@ import { List } from 'immutable'
 import * as actions from '../src/client/actions'
 import { GameStatus } from '../src/client/actions'
 
+import configureStore from 'redux-mock-store'
+import thunk from 'redux-thunk'
+
+import io from 'socket.io-client';
+import http from 'http';
+import ioBack from 'socket.io';
+
+describe('action async', () => {
+	let socket;
+	let httpServer;
+	let httpServerAddr;
+	let ioServer;
+	let middlewares;
+	let mockStore;
+	let store;
+
+	beforeAll((done) => {
+		httpServer = http.createServer().listen();
+		httpServerAddr = httpServer.listen().address();
+		ioServer = ioBack(httpServer);
+		middlewares = [thunk]
+		mockStore = configureStore(middlewares)
+		store = mockStore({
+			board: List().set(19, undefined).map(e => List().set(9, undefined)),
+			currentShape :{
+				pos: { x: 4, y: 0 },
+				color: 'white',
+				shape: [
+					{x: 0, y: 0},
+					{x: 1, y: 0},
+					{x: 0, y: 1},
+					{x: 1, y: 1}
+				],
+				len: 1
+			},
+			info: 'undefined',
+			score: 0,
+			mode: {
+				type: 'solo',
+				meta : { name: undefined }
+			},
+			nextShape: List().set(6, undefined).map(e => List().set(4, undefined)),
+			spectre: List().set(9, 2).map(e => 0),
+			status: GameStatus.LOADING
+		})
+		done();
+	});
+	afterAll((done) => {
+		ioServer.close();
+		httpServer.close();
+		done();
+	});
+	beforeEach((done) => {
+		socket = io.connect(`http://[${httpServerAddr.address}]:${httpServerAddr.port}`, {
+			'reconnection delay': 0,
+			'reopen delay': 0,
+			'force new connection': true,
+			transports: ['websocket'],
+		});
+		socket.on('connect', () => {
+			done();
+		});
+	});
+	afterEach((done) => {
+		if (socket.connected) {
+			socket.disconnect();
+		}
+		done();
+	});
+	/*
+	test('should communicate', (done) => {
+		ioServer.emit('echo', 'Hello World');
+		socket.once('echo', (message) => {
+			expect(message).toBe('Hello World');
+			done();
+		});
+		ioServer.on('connection', (mySocket) => {
+			expect(mySocket).toBeDefined();
+		});
+	});
+	*/
+
+});
+
 describe('action sync', () => {
 	test('update mode', () => {
 		const obj = { type: 'solo', meta: { name: undefined } };

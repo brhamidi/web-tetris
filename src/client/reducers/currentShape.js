@@ -1,6 +1,6 @@
 import { updateShape } from '../actions';
 
-const initialState = {
+export const initialState = {
 	pos: { x: 4, y: 0 },
 	color: 'white',
 	shape: [

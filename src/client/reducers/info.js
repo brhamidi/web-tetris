@@ -1,4 +1,4 @@
-const initialState = 'undefined'
+export const initialState = 'undefined'
 
 const info = (info = initialState, action) => {
 	switch (action.type) {

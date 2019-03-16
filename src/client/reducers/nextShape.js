@@ -1,6 +1,6 @@
 import { List } from 'immutable'
 
-const initialState = List().set(6, undefined).map(e => List().set(4, undefined));
+export const initialState = List().set(6, undefined).map(e => List().set(4, undefined));
 
 const nextShape = (state = initialState, action) => {
 	switch (action.type) {
