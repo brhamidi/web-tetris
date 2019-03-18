@@ -27,6 +27,8 @@ let middlewares;
 let mockStore;
 let store;
 
+jest.setTimeout(10000);
+
 beforeAll((done) => {
 	httpServer = http.createServer().listen(1337, '127.0.0.1');
 	httpServerAddr = httpServer.listen().address();
