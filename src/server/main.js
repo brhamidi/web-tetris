@@ -15,7 +15,7 @@ app.listen(port, hostname, () => {
 	console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-const handler = (req, res) => {
+function handler(req, res) {
 	if (req.url != '/')
 	{
 		res.setHeader('Content-Type', 'text/plain');

@@ -7,6 +7,7 @@ import { initialState as spectre } from '../src/client/reducers/spectre';
 
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { List } from 'immutable';
 
 import * as actions from '../src/client/actions';
 
@@ -16,6 +17,7 @@ const ioBack = require('socket.io');
 
 const info = 'undefined';
 const status = GameStatus.LOADING;
+
 const score = 0;
 let socket;
 let httpServer;
@@ -34,6 +36,7 @@ beforeAll((done) => {
 	ioServer.on('connection', (socket) => {
 		socket.on('info', (a, b) => {
 			socket.emit('info_response', 'host');
+			socket.emit('mode', 'mode');
 		})
 	})
 	done();
@@ -74,8 +77,42 @@ afterEach((done) => {
 	done();
 });
 
-describe('Async action dispatch good actoin', () => {
-	test('newTetrimino', (done) => {
+describe('Async action dispatch good action', () => {
+	test('newTetrimino - Board filled', (done) => {
+		const expectedActions = [
+			actions.destroyLine(List.of(0, 1, 2, 3)),
+			actions.updateScore(4),
+			actions.setCurrShape(undefined)
+		]
+
+		const newBoard =
+			List().set(19, undefined)
+			.map(e => List()
+				.set(9, undefined)
+				.map(e => 'green')
+			);
+		const newShape = {
+			pos: { x: 4, y: 0 },
+			color: 'purple',
+			shape: [
+				{x: 0, y: 0},
+				{x: 0, y: 1},
+				{x: 0, y: 2},
+				{x: 0, y: 3}
+			],
+			len: 4
+		};
+		store = mockStore(Object.assign({}, store.getState(), {
+			currentShape: newShape,
+			board: newBoard
+		}));
+		store.dispatch(actions.newTetrimino(socket));
+		setTimeout(() => {
+			expect(store.getActions()).toEqual(expectedActions);
+			done();
+		}, 100)
+	})
+	test('newTetrimino - Board empty', (done) => {
 		const expectedActions = [
 			actions.setCurrShape(undefined)
 		]
@@ -88,7 +125,8 @@ describe('Async action dispatch good actoin', () => {
 	})
 	test('setInfo - Game is running', (done) => {
 		const expectedActions = [
-			actions.info('host')
+			actions.info('host'),
+			actions.updateMode('mode')
 		]
 
 		store = mockStore(Object.assign({}, store.getState(), {status: GameStatus.RUNNING}));
@@ -98,10 +136,11 @@ describe('Async action dispatch good actoin', () => {
 			done();
 		}, 100)
 	})
-	test('setInfo - Game is beginning', (done) => {
+	test('setInfo - Game is Loading', (done) => {
 		const expectedActions = [
 			actions.info('host'),
-			actions.setStatusGame(GameStatus.BEGINNING)
+			actions.setStatusGame(GameStatus.BEGINNING),
+			actions.updateMode('mode')
 		]
 
 		store.dispatch(actions.setInfo(socket, 'test', 'test'));
