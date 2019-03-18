@@ -27,7 +27,10 @@ const board = (board = emptyBoard, action) => {
 				action.shape.shape.reduce((acc, curr) => {
 					const y = curr.y + action.shape.pos.y;
 					const x = curr.x + action.shape.pos.x;
-					return acc.setIn([y, x], action.shape.color);
+					if (y >= 0)
+						return acc.setIn([y, x], action.shape.color);
+					else
+						return acc;
 				}, board)
 			);
 		default:
