@@ -15,8 +15,6 @@ module.exports = {
 		}
 	},
 
-	timers: "10000",
-
 	// The test environment that will be used for testing
 	testEnvironment: "jest-environment-jsdom-global",
 
