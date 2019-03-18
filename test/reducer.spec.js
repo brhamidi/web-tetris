@@ -143,28 +143,47 @@ describe('reducer board', () => {
 		],
 		len: 1
 	};
-	const mergedBoard = shape.shape.reduce((acc, curr) => {
+	const mergedBoard = (shape) => (shape.shape.reduce((acc, curr) => {
 		const y = curr.y + shape.pos.y;
 		const x = curr.x + shape.pos.x;
-		return acc.setIn([y, x], shape.color);
-	}, initialState);
+		if (y >= 0)
+			return acc.setIn([y, x], shape.color);
+		else
+			return acc;
+	}, initialState));
 
+
+	test('should return a board merged with shape to high', () => {
+		const shape2 = {
+			pos: { x: 4, y: -1 },
+			color: 'white',
+			shape: [
+				{x: 0, y: 0},
+				{x: 1, y: 0},
+				{x: 0, y: 1},
+				{x: 1, y: 1}
+			],
+			len: 1
+		};
+		expect(board(initialState, {type: 'MERGE_SHAPE', shape: shape2 }))
+			.toEqual(mergedBoard(shape2));
+	})
 
 	test('should return a board merged with shape', () => {
 		expect(board(initialState, {type: 'MERGE_SHAPE', shape}))
-			.toEqual(mergedBoard);
+			.toEqual(mergedBoard(shape));
 	})
 	test('should return a destroyed board', () => {
-		const action = {type: 'DESTROY', tabY: [14, 13, 13, 11]}
+		const action = {type: 'DESTROY', tabY: [12, 13, 13]}
 		const res = action.tabY.sort((a, b) => {
 			if (a < b) { return -1; }
 			else if (a > b) { return 1; }
 			else { return 0; }
 		}).reduce((acc, curr) => {
 			return acc.delete(curr).insert(0, List().set(9, undefined));
-		}, mergedBoard);
+		}, mergedBoard(shape));
 
-		expect(board(mergedBoard, action)).toEqual(res);
+		expect(board(mergedBoard(shape), action)).toEqual(res);
 	})
 })
 
