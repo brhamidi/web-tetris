@@ -112,7 +112,7 @@ describe('Async action dispatch good action', () => {
 		setTimeout(() => {
 			expect(store.getActions()).toEqual(expectedActions);
 			done();
-		}, 100)
+		}, 50)
 	})
 	test('newTetrimino - Board empty', (done) => {
 		const expectedActions = [
@@ -123,7 +123,7 @@ describe('Async action dispatch good action', () => {
 		setTimeout(() => {
 			expect(store.getActions()).toEqual(expectedActions);
 			done();
-		}, 100)
+		}, 50)
 	})
 	test('setInfo - Game is running', (done) => {
 		const expectedActions = [
@@ -136,7 +136,7 @@ describe('Async action dispatch good action', () => {
 		setTimeout(() => {
 			expect(store.getActions()).toEqual(expectedActions);
 			done();
-		}, 100)
+		}, 50)
 	})
 	test('setInfo - Game is Loading', (done) => {
 		const expectedActions = [
@@ -149,6 +149,6 @@ describe('Async action dispatch good action', () => {
 		setTimeout(() => {
 			expect(store.getActions()).toEqual(expectedActions);
 			done();
-		}, 100)
+		}, 50)
 	})
 })
