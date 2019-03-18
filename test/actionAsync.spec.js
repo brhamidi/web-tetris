@@ -28,6 +28,7 @@ let mockStore;
 let store;
 
 beforeAll((done) => {
+	jest.setTimeout(50000);
 	httpServer = http.createServer().listen(1337, '127.0.0.1');
 	httpServerAddr = httpServer.listen().address();
 	ioServer = ioBack(httpServer);
@@ -110,7 +111,7 @@ describe('Async action dispatch good action', () => {
 		setTimeout(() => {
 			expect(store.getActions()).toEqual(expectedActions);
 			done();
-		}, 100)
+		}, 50)
 	})
 	test('newTetrimino - Board empty', (done) => {
 		const expectedActions = [
@@ -121,7 +122,7 @@ describe('Async action dispatch good action', () => {
 		setTimeout(() => {
 			expect(store.getActions()).toEqual(expectedActions);
 			done();
-		}, 100)
+		}, 50)
 	})
 	test('setInfo - Game is running', (done) => {
 		const expectedActions = [
@@ -134,7 +135,7 @@ describe('Async action dispatch good action', () => {
 		setTimeout(() => {
 			expect(store.getActions()).toEqual(expectedActions);
 			done();
-		}, 100)
+		}, 50)
 	})
 	test('setInfo - Game is Loading', (done) => {
 		const expectedActions = [
@@ -147,7 +148,7 @@ describe('Async action dispatch good action', () => {
 		setTimeout(() => {
 			expect(store.getActions()).toEqual(expectedActions);
 			done();
-		}, 100)
+		}, 50)
 	})
 	test('shapeShouldDown - can down', (done) => {
 		const newBoard = List().set(19, undefined).map(e =>
