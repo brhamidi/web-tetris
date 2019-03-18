@@ -15,8 +15,17 @@ app.listen(port, hostname, () => {
 	console.log(`Server running at http://${hostname}:${port}/`);
 });
 
+process.on('SIGINT', () => {
+	console.log('Closing http server.');
+	io.close();
+	app.close(() => {
+		console.log('Http and socket server closed.');
+	});
+	process.exit();
+});
+
 function handler(req, res) {
-	if (req.url != '/')
+	if (req.url !== '/' && req.url !== '/bundle.js')
 	{
 		res.setHeader('Content-Type', 'text/plain');
 		res.writeHead(404);
@@ -25,20 +34,17 @@ function handler(req, res) {
 	}
 	else
 	{
+		const fileName = req.url === '/' ? '/../../index.html' : '/../../build/bundle.js';
+
 		res.writeHead(200, {'Content-Type': 'text/html'});
-		fs.readFile(__dirname + '/../../index.html', null, function(error, data)
+		fs.readFile(__dirname + fileName, null, function(error, data) {
+			if (error)
 			{
-				if (error)
-				{
-					res.writeHead(404);
-					res.write('File not found!');
-				}
-				else
-				{
-					res.write(data,  {'Content-Type': 'text/javascript'});
-				}
-				res.end();
-			});
+				res.writeHead(404);
+				res.end('File not found!');
+			}
+			res.end(data);
+		});
 	}
 	return res;
 }
