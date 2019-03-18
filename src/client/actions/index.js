@@ -1,4 +1,4 @@
-import { List } from 'immutable';
+import { List, fromJS} from 'immutable';
 
 export const GameStatus = {
 	ERROR: 'ERROR',
@@ -204,10 +204,11 @@ export const shapeToBotton = (shape, board, y) => {
 	return (canPut(updateShape(shape, 0, y + 1), board) === true ?
 		shapeToBotton(shape, board, y + 1) : y);
 }
+
 const handler = (event, getState, socket, dispatch) => {
 	const { currentShape, board } = getState();
 	const shape = currentShape;
-
+	
 	if (currentShape.color != 'white')
 	{
 		if (event.code === "Space") {
@@ -281,7 +282,7 @@ export const OnEvent = (socket) => {
 		})
 		socket.on('tetrimino', (curr, next) => {
 			dispatch(setCurrShape(curr));
-			dispatch(setNextShape(next));
+			dispatch(setNextShape(fromJS(next)));
 		})
 		socket.on('won', () => {
 			dispatch(setStatusGame(GameStatus.WON));
@@ -302,11 +303,11 @@ export const OnEvent = (socket) => {
 	}
 }
 
-const reset_board = {
+export const reset_board = {
 	type: 'RESET_BOARD'
 };
 
-const reset_next_shape = {
+export const reset_next_shape = {
 	type: 'RESET_NEXT_SHAPE'
 };
 

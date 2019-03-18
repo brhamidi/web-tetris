@@ -149,4 +149,121 @@ describe('Async action dispatch good action', () => {
 			done();
 		}, 100)
 	})
+	test('shapeShouldDown - can down', (done) => {
+		const newBoard = List().set(19, undefined).map(e =>
+			List().set(9, undefined));
+		const newShape = {
+			pos: { x: 4, y: 0 },
+			color: 'purple',
+			shape: [
+				{x: 0, y: 0},
+				{x: 0, y: 1},
+				{x: 0, y: 2},
+				{x: 0, y: 3}
+			],
+			len: 4
+		};
+		const expectedActions = [
+			actions.shapeDown(newBoard)
+		];
+		store = mockStore(Object.assign({}, store.getState(), {
+			currentShape: newShape,
+			board: newBoard
+		}));
+		store.dispatch(actions.shapeShouldDown(socket));
+		setTimeout(() => {
+			expect(store.getActions()).toEqual(expectedActions);
+			done();
+		}, 100);
+	});
+	test('shapeShouldDown - is alive', (done) => {
+		const newBoard = List().set(19, undefined).map(e =>
+			List().set(9, undefined));
+		const newShape = {
+			pos: { x: 4, y: 16 },
+			color: 'purple',
+			shape: [
+				{x: 0, y: 0},
+				{x: 0, y: 1},
+				{x: 0, y: 2},
+				{x: 0, y: 3}
+			],
+			len: 4
+		};
+		const expectedActions = [
+			actions.mergeCurrShape(newShape),
+			actions.setCurrShape(undefined)
+		];
+		store = mockStore(Object.assign({}, store.getState(), {
+			currentShape: newShape,
+			board: newBoard
+		}));
+		store.dispatch(actions.shapeShouldDown(socket));
+		setTimeout(() => {
+			expect(store.getActions()).toEqual(expectedActions);
+			done();
+		}, 100);
+	});
+	test('shapeShouldDown - is dead', (done) => {
+		const newBoard = List().set(19, undefined).map(e =>
+			List().set(9, undefined).map(e => 'e'));
+		const newShape = {
+			pos: { x: 4, y: -1 },
+			color: 'purple',
+			shape: [
+				{x: 0, y: 0},
+				{x: 0, y: 1},
+				{x: 0, y: 2},
+				{x: 0, y: 3}
+			],
+			len: 4
+		};
+		const expectedActions = [
+			actions.mergeCurrShape(newShape),
+			actions.setStatusGame(GameStatus.LOOSE),
+			actions.reset_board,
+			actions.reset_next_shape
+		];
+		store = mockStore(Object.assign({}, store.getState(), {
+			currentShape: newShape,
+			board: newBoard
+		}));
+		store.dispatch(actions.shapeShouldDown(socket));
+		setTimeout(() => {
+			expect(store.getActions()).toEqual(expectedActions);
+			done();
+		}, 100);
+	});
+	test('startFall', (done) => {
+		const expectedActions = [
+			actions.setCurrShape(undefined)
+		];
+		store.dispatch(actions.startFall(socket));
+		setTimeout(() => {
+			expect(store.getActions()).toEqual(expectedActions);
+			done();
+		}, 100);
+	});
+	test('OnStart - OnEvent - OnPress - handler', (done) => {
+		const expectedActions = [
+			actions.setStatusGame(GameStatus.RUNNING),
+			actions.setCurrShape(undefined),
+			actions.updateSpectre('spectre'),
+			actions.setCurrShape(currentShape),
+			actions.setNextShape(List().set(6, undefined).map(e => List().set(4, undefined).map(e => 'blue'))),
+			actions.addMalus(2),
+			actions.setCurrShape(actions.updateShape(currentShape, 0, -2))
+		];
+		store.dispatch(actions.OnStart(socket));
+		ioServer.emit('start');
+		setTimeout(() => {
+			ioServer.emit('spectre', 'spectre');
+			ioServer.emit('tetrimino', currentShape, List().set(6, undefined).map(e => List().set(4, undefined).map(e => 'blue')));
+			ioServer.emit('malus', 2);
+			setTimeout(() => {
+				expect(store.getActions()).toEqual(expectedActions);
+				done();
+			}, 100);
+		}, 100);
+	});
 })

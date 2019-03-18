@@ -16,7 +16,7 @@ module.exports = {
 	},
 
 	// The test environment that will be used for testing
-	testEnvironment: "node",
+	testEnvironment: "jest-environment-jsdom-global",
 
 	testPathIgnorePatterns: [
 		"/node_modules/"
