@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home renders correctly 1`] = `
+<div>
+  <div
+    className="status"
+  />
+  <h3
+    className="title"
+  >
+    Home Page
+  </h3>
+  <form
+    onSubmit={[Function]}
+  >
+    <label>
+      room
+    </label>
+    <input
+      className="room"
+      onChange={[Function]}
+      type="text"
+      value=""
+    />
+    <label>
+      player
+    </label>
+    <input
+      className="player"
+      onChange={[Function]}
+      type="text"
+      value=""
+    />
+    <input
+      className="submit"
+      type="submit"
+      value="Submit"
+    />
+  </form>
+</div>
+`;

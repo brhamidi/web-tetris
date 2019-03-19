@@ -245,26 +245,4 @@ describe('Async action dispatch good action', () => {
 			done();
 		}, 100);
 	});
-	test('OnStart - OnEvent - OnPress - handler', (done) => {
-		const expectedActions = [
-			actions.setStatusGame(GameStatus.RUNNING),
-			actions.setCurrShape(undefined),
-			actions.updateSpectre('spectre'),
-			actions.setCurrShape(currentShape),
-			actions.setNextShape(List().set(6, undefined).map(e => List().set(4, undefined).map(e => 'blue'))),
-			actions.addMalus(2),
-			actions.setCurrShape(actions.updateShape(currentShape, 0, -2))
-		];
-		store.dispatch(actions.OnStart(socket));
-		ioServer.emit('start');
-		setTimeout(() => {
-			ioServer.emit('spectre', 'spectre');
-			ioServer.emit('tetrimino', currentShape, List().set(6, undefined).map(e => List().set(4, undefined).map(e => 'blue')));
-			ioServer.emit('malus', 2);
-			setTimeout(() => {
-				expect(store.getActions()).toEqual(expectedActions);
-				done();
-			}, 100);
-		}, 100);
-	});
 })
