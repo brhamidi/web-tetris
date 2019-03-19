@@ -482,7 +482,4 @@ describe('Async action dispatch good action', () => {
 			}, 200);
 		}, 200);
 	});
-
-
-
 })

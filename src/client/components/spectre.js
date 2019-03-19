@@ -8,13 +8,13 @@ const Spectre = ({ mode, spectre }) => {
 	if (mode.type === 'solo') {
 		return (
 			<div style={Styles.spectreStyle} >
-				<h2 style={Styles.title}> Solo Mode </h2>
+				<h2 style={Styles.title}>Solo Mode</h2>
 			</div>
 		);
 	}
 	return (
 		<div style={Styles.spectreStyle} >
-			<h2 style={Styles.title}> [{mode.meta.name}] </h2>
+			<h2 style={Styles.title}>[{mode.meta.name}]</h2>
 			<div style={Styles.boardStyle}>
 				{elem}
 			</div>

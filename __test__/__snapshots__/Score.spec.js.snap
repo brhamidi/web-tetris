@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Score renders correctly 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "grey",
+      "height": "100px",
+      "width": "100%",
+    }
+  }
+>
+  <p>
+     Score: 
+  </p>
+</div>
+`;

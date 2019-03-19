@@ -1,0 +1,163 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Spectre renders correctly in multi 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "black",
+      "display": "flex",
+      "flexFlow": "row wrap",
+      "justifyContent": "center",
+      "width": "25%",
+    }
+  }
+>
+  <h2
+    style={
+      Object {
+        "color": "white",
+      }
+    }
+  >
+    [
+    Deneryss
+    ]
+  </h2>
+  <div
+    style={
+      Object {
+        "alignItems": "flex-end",
+        "border": "solid white 3px",
+        "display": "flex",
+        "height": "450px",
+        "width": "90%",
+      }
+    }
+  >
+    <div
+      key="0"
+      style={
+        Object {
+          "backgroundColor": "white",
+          "height": "0%",
+          "width": "10%",
+        }
+      }
+    />
+    <div
+      key="1"
+      style={
+        Object {
+          "backgroundColor": "white",
+          "height": "0%",
+          "width": "10%",
+        }
+      }
+    />
+    <div
+      key="2"
+      style={
+        Object {
+          "backgroundColor": "white",
+          "height": "0%",
+          "width": "10%",
+        }
+      }
+    />
+    <div
+      key="3"
+      style={
+        Object {
+          "backgroundColor": "white",
+          "height": "0%",
+          "width": "10%",
+        }
+      }
+    />
+    <div
+      key="4"
+      style={
+        Object {
+          "backgroundColor": "white",
+          "height": "0%",
+          "width": "10%",
+        }
+      }
+    />
+    <div
+      key="5"
+      style={
+        Object {
+          "backgroundColor": "white",
+          "height": "0%",
+          "width": "10%",
+        }
+      }
+    />
+    <div
+      key="6"
+      style={
+        Object {
+          "backgroundColor": "white",
+          "height": "0%",
+          "width": "10%",
+        }
+      }
+    />
+    <div
+      key="7"
+      style={
+        Object {
+          "backgroundColor": "white",
+          "height": "0%",
+          "width": "10%",
+        }
+      }
+    />
+    <div
+      key="8"
+      style={
+        Object {
+          "backgroundColor": "white",
+          "height": "0%",
+          "width": "10%",
+        }
+      }
+    />
+    <div
+      key="9"
+      style={
+        Object {
+          "backgroundColor": "white",
+          "height": "0%",
+          "width": "10%",
+        }
+      }
+    />
+  </div>
+</div>
+`;
+
+exports[`Spectre renders correctly in solo 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "black",
+      "display": "flex",
+      "flexFlow": "row wrap",
+      "justifyContent": "center",
+      "width": "25%",
+    }
+  }
+>
+  <h2
+    style={
+      Object {
+        "color": "white",
+      }
+    }
+  >
+    Solo Mode
+  </h2>
+</div>
+`;

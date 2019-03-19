@@ -15,14 +15,15 @@ module.exports = {
 		}
 	},
 
-	// The test environment that will be used for testing
-	testEnvironment: "jest-environment-jsdom-global",
-
 	testPathIgnorePatterns: [
 		"/node_modules/"
 	],
 	transformIgnorePatterns: [
 		"/node_modules/"
-	]
+	],
+
+	setupFilesAfterEnv: ["jest-enzyme"],
+
+	testEnvironment: "enzyme"
 
 };

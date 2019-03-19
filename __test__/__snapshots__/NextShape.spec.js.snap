@@ -1,0 +1,422 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NextShape renders correctly 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "black",
+      "display": "flex",
+      "flexFlow": "row wrap",
+      "justifyContent": "center",
+      "width": "15%",
+    }
+  }
+>
+  <h2
+    style={
+      Object {
+        "color": "white",
+      }
+    }
+  >
+     Next Shape 
+  </h2>
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "flexFlow": "row wrap",
+        "height": "350px",
+        "justifyContent": "center",
+        "width": "80%",
+      }
+    }
+  >
+    <div
+      key="00"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="01"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="02"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="03"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="04"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="10"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="11"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="12"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="13"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="14"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="20"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="21"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="22"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="23"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="24"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="30"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="31"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="32"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="33"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="34"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="40"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="41"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="42"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="43"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="44"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="50"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="51"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="52"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="53"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="54"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="60"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="61"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="62"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="63"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+    <div
+      key="64"
+      style={
+        Object {
+          "backgroundColor": "black",
+          "border": "solid black 1px",
+          "height": "50px",
+          "width": "19%",
+        }
+      }
+    />
+  </div>
+</div>
+`;

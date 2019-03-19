@@ -6,7 +6,6 @@ const Home = ({ status, cb }) => {
 	const [player, setPlayer] = useState('');
 
 	const handleSubmit = (e) => {
-		e.preventDefault();
 		if (room !== '' && player !== '') {
 			cb(room, player);
 			window.location.hash = `#${room}[${player}]`;
@@ -15,22 +14,23 @@ const Home = ({ status, cb }) => {
 
 	return (
 		<div>
-			{status}
-			<h3> Home Page </h3>
+			<div className="status">{status}</div>
+			<h3 className="title">Home Page</h3>
 			<form onSubmit={handleSubmit}>
-				<label> room </label>
-				<input
+				<label>room</label>
+				<input className="room"
 					type="text"
 					value={room}
 					onChange={(e) => setRoom(e.target.value)}
 				/>
-				<label> player </label>
-				<input
+				<label>player</label>
+				<input className="player"
 					type="text"
 					value={player}
-					onChange={(e) => setPlayer(e.target.value)}
+					onChange={(e) => setPlayer(e.target.value)
+					}
 				/>
-				<input type="submit" value="Submit" />
+				<input className="submit" type="submit" value="Submit" />
 			</form>
 		</div>
 	)
