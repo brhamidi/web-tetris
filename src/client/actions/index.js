@@ -282,7 +282,7 @@ export const OnEvent = (socket) => {
 		})
 		socket.on('tetrimino', (curr, next) => {
 			dispatch(setCurrShape(curr));
-			dispatch(setNextShape(fromJS(next)));
+			dispatch(setNextShape(next));
 		})
 		socket.on('won', () => {
 			dispatch(setStatusGame(GameStatus.WON));
