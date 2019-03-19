@@ -7,13 +7,14 @@ const nextShape = (state = initialState, action) => {
 		case 'RESET_NEXT_SHAPE':
 			return initialState
 		case 'SET_NEXT_SHAPE':
-			return (
-				action.shape.shape.reduce((acc, curr) => {
-					const y = curr.y + 2;
-					const x = curr.x + 1;
-					return acc.setIn([y, x], action.shape.color);
-				}, initialState)
-			);
+			if (action.shape.shape)
+				return (
+					action.shape.shape.reduce((acc, curr) => {
+						const y = curr.y + 2;
+						const x = curr.x + 1;
+						return acc.setIn([y, x], action.shape.color);
+					}, initialState)
+				);
 		default:
 			return state;
 	}

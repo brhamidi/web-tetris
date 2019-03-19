@@ -53,6 +53,20 @@ describe('reducer next shape', () => {
 	const initialState =
 		List().set(6, undefined).map(e => List().set(4, undefined));
 
+	test('should return state', () => {
+		const shape = {
+			pos: { x: 4, y: 18 },
+			color: 'white',
+			shape: undefined,
+			len: 1
+		};
+		const action = {type: 'SET_NEXT_SHAPE', shape}
+
+		expect(nextShape(initialState, action))
+			.toEqual(initialState)
+
+	})
+
 	test('should return the initial state', () => {
 		expect(nextShape(undefined, {})).toEqual(initialState);
 	})

@@ -289,8 +289,9 @@ export const OnEvent = (socket) => {
 			return dispatch(OnCloseBoard(socket));
 		})
 		socket.on('malus', (n) => {
-			dispatch(addMalus(n))
+			dispatch(addMalus(n));
 			const { board, currentShape } = getState();
+			socket.emit('spectre', calculateSpectrum(board));
 			if ((board.get(0).filter(e => e === undefined).size) === 10)
 				dispatch(setCurrShape(updateShape(currentShape, 0, n * -1)));
 			else {

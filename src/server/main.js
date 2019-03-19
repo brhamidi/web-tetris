@@ -94,6 +94,15 @@ io.on('connection', function(socket){
 		}
 	});
 
+	socket.on('spectre', function (spectre) {
+			const ennemy = ennemy_socket(actual_game, socket);
+		if (ennemy)
+		{
+			ennemy.emit('spectre', spectre);
+			console.log('emited spectre');
+		}
+	});
+
 	socket.on('start', function() {
 		//secure for p1 only?
 		if (actual_game && !actual_game.running)

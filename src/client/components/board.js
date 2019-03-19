@@ -38,7 +38,7 @@ const Board = ({ OnStart, player, status, currentShape, board }) => {
 	const tab = prevShape.shape.reduce((acc, currValue) => {
 		const y = currValue.y + prevShape.pos.y;
 		const x = currValue.x + prevShape.pos.x;
-		if (y >= 0)
+		if (y >= 0 && currentShape.color != 'white')
 			return acc.setIn([y, x], 'preview');
 		return acc;
 	}, board);
