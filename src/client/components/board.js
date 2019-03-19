@@ -8,17 +8,13 @@ const Board = ({ OnStart, player, status, currentShape, board }) => {
 
 	useEffect(() => {
 		if (status === GameStatus.WON || status === GameStatus.LOOSE
-			|| status == GameStatus.BEGINNING) {
-			console.log('player change: Board onStart()');
+			|| status == GameStatus.BEGINNING)
 			OnStart();
-		}
 	}, [player])
 
 	useEffect(() => {
-		if (status === GameStatus.WON || status === GameStatus.LOOSE) {
-			console.log('Status change: Board OnStart()');
+		if (status === GameStatus.WON || status === GameStatus.LOOSE)
 			OnStart()
-		}
 	}, [status])
 
 	const reducerBoard = (acc, currValue) => {

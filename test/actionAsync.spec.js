@@ -235,6 +235,7 @@ describe('Async action dispatch good action', () => {
 			done();
 		}, 100);
 	});
+
 	test('startFall', (done) => {
 		const expectedActions = [
 			actions.setCurrShape(undefined)
@@ -245,26 +246,243 @@ describe('Async action dispatch good action', () => {
 			done();
 		}, 100);
 	});
-	test('OnStart - OnEvent - OnPress - handler', (done) => {
+	test('OnStart - OnEvent spectre, malus, won', (done) => {
 		const expectedActions = [
 			actions.setStatusGame(GameStatus.RUNNING),
 			actions.setCurrShape(undefined),
 			actions.updateSpectre('spectre'),
-			actions.setCurrShape(currentShape),
-			actions.setNextShape(List().set(6, undefined).map(e => List().set(4, undefined).map(e => 'blue'))),
 			actions.addMalus(2),
-			actions.setCurrShape(actions.updateShape(currentShape, 0, -2))
+			actions.setCurrShape(actions.updateShape(currentShape, 0, -2)),
+			actions.setStatusGame(GameStatus.WON),
+			actions.reset_board,
+			actions.reset_next_shape
 		];
+
 		store.dispatch(actions.OnStart(socket));
 		ioServer.emit('start');
+
 		setTimeout(() => {
 			ioServer.emit('spectre', 'spectre');
-			ioServer.emit('tetrimino', currentShape, List().set(6, undefined).map(e => List().set(4, undefined).map(e => 'blue')));
 			ioServer.emit('malus', 2);
+			ioServer.emit('won');
+
 			setTimeout(() => {
 				expect(store.getActions()).toEqual(expectedActions);
 				done();
 			}, 100);
 		}, 100);
 	});
+
+	test('OnStart - OnEvent malus dead', (done) => {
+		const newBoard = List().set(19, undefined).map(e =>
+			List().set(9, 'black'));
+		store = mockStore(Object.assign({}, store.getState(), {
+			board: newBoard
+		}));
+
+		const expectedActions = [
+			actions.setStatusGame(GameStatus.RUNNING),
+			actions.setCurrShape(undefined),
+			actions.addMalus(3),
+			actions.setStatusGame(GameStatus.LOOSE),
+			actions.reset_board,
+			actions.reset_next_shape
+		];
+
+		store.dispatch(actions.OnStart(socket));
+		ioServer.emit('start');
+
+		setTimeout(() => {
+			ioServer.emit('malus', 3);
+			setTimeout(() => {
+				expect(store.getActions()).toEqual(expectedActions);
+				done();
+			}, 100);
+		}, 100);
+	});
+
+	test('OnStart - OnEvent - OnPress - handler', (done) => {
+		const newBoard = List().set(19, undefined).map(e =>
+			List().set(9, undefined));
+		const newShape = {
+			pos: { x: 4, y: 4 },
+			color: 'purple',
+			shape: [
+				{x: 0, y: 0},
+				{x: 0, y: 1},
+				{x: 0, y: 2},
+				{x: 0, y: 3}
+			],
+			len: 4
+		};
+		store = mockStore(Object.assign({}, store.getState(), {
+			board: newBoard,
+			currentShape: newShape
+		}));
+		const expectedActions = [
+			actions.setStatusGame(GameStatus.RUNNING),
+			actions.setCurrShape(undefined),
+			actions.shapeRotate(),
+			actions.shapeLeft(),
+			actions.shapeRight(),
+			actions.shapeDown(),
+		];
+
+		store.dispatch(actions.OnStart(socket));
+		ioServer.emit('start');
+		setTimeout(() => {
+			const arrowUp = new Event('keydown');
+			arrowUp.code = 'ArrowUp'
+			const arrowLeft = new Event('keydown');
+			arrowLeft.code = 'ArrowLeft'
+			const arrowRight = new Event('keydown');
+			arrowRight.code = 'ArrowRight'
+			const arrowDown = new Event('keydown');
+			arrowDown.code = 'ArrowDown'
+			window.dispatchEvent(arrowUp);
+			window.dispatchEvent(arrowLeft);
+			window.dispatchEvent(arrowRight);
+			window.dispatchEvent(arrowDown);
+			setTimeout(() => {
+				expect(store.getActions()).toEqual(expectedActions);
+				done();
+			}, 100);
+		}, 100);
+	});
+	test('OnStart - OnEvent - OnPress - handler cant up/right', (done) => {
+		const newBoard = List().set(19, undefined).map(e =>
+			List().set(9, undefined));
+		const newShape = {
+			pos: { x: 8, y: 16 },
+			color: 'purple',
+			shape: [
+				{x: 1, y: 0},
+				{x: 1, y: 1},
+				{x: 1, y: 2},
+				{x: 1, y: 3}
+			],
+			len: 4
+		};
+		store = mockStore(Object.assign({}, store.getState(), {
+			board: newBoard,
+			currentShape: newShape
+		}));
+		const expectedActions = [
+			actions.setStatusGame(GameStatus.RUNNING),
+			actions.setCurrShape(undefined)
+		];
+
+		store.dispatch(actions.OnStart(socket));
+		ioServer.emit('start');
+		setTimeout(() => {
+			const arrowUp = new Event('keydown');
+			arrowUp.code = 'ArrowUp'
+			const arrowRight = new Event('keydown');
+			arrowRight.code = 'ArrowRight'
+			window.dispatchEvent(arrowUp);
+			window.dispatchEvent(arrowRight);
+			setTimeout(() => {
+				expect(store.getActions()).toEqual(expectedActions);
+				done();
+			}, 100);
+		}, 100);
+	});
+	test('OnStart - OnEvent - OnPress - handler cant left/down', (done) => {
+		const newBoard = List().set(19, undefined).map(e =>
+			List().set(9, undefined));
+		const newShape = {
+			pos: { x: -1, y: 16 },
+			color: 'purple',
+			shape: [
+				{x: 1, y: 0},
+				{x: 1, y: 1},
+				{x: 1, y: 2},
+				{x: 1, y: 3}
+			],
+			len: 4
+		};
+		store = mockStore(Object.assign({}, store.getState(), {
+			board: newBoard,
+			currentShape: newShape
+		}));
+		const expectedActions = [
+			actions.setStatusGame(GameStatus.RUNNING),
+			actions.setCurrShape(undefined),
+			actions.mergeCurrShape(newShape),
+			actions.setCurrShape(undefined)
+		];
+
+		store.dispatch(actions.OnStart(socket));
+		ioServer.emit('start');
+		setTimeout(() => {
+			const arrowLeft = new Event('keydown');
+			arrowLeft.code = 'ArrowLeft'
+			const arrowDown = new Event('keydown');
+			arrowDown.code = 'ArrowDown'
+			window.dispatchEvent(arrowLeft);
+			window.dispatchEvent(arrowDown);
+			setTimeout(() => {
+				expect(store.getActions()).toEqual(expectedActions);
+				done();
+			}, 100);
+		}, 100);
+	});
+	test('OnStart - OnEvent - OnPress - handler space', (done) => {
+		const newBoard = List().set(19, undefined).map(e =>
+			List().set(9, undefined));
+		const newShape = {
+			pos: { x: -1, y: 16 },
+			color: 'purple',
+			shape: [
+				{x: 1, y: 0},
+				{x: 1, y: 1},
+				{x: 1, y: 2},
+				{x: 1, y: 3}
+			],
+			len: 4
+		};
+		store = mockStore(Object.assign({}, store.getState(), {
+			board: newBoard,
+			currentShape: newShape
+		}));
+		const expectedActions = [
+			actions.setStatusGame(GameStatus.RUNNING),
+			actions.setCurrShape(undefined),
+			actions.shapeBottom(0),
+			actions.mergeCurrShape(newShape),
+			actions.setCurrShape(undefined)
+		];
+
+		store.dispatch(actions.OnStart(socket));
+		ioServer.emit('start');
+		setTimeout(() => {
+			const space = new Event('keydown');
+			space.code = 'Space'
+			window.dispatchEvent(space);
+			setTimeout(() => {
+				expect(store.getActions()).toEqual(expectedActions);
+				done();
+			}, 200);
+		}, 200);
+	});
+	test('startGame', (done) => {
+		const expectedActions = [
+			actions.setStatusGame(GameStatus.RUNNING),
+			actions.setCurrShape(undefined),
+		];
+
+		store.dispatch(actions.startGame(socket));
+		setTimeout(() => {
+			const enter = new Event('keydown');
+			enter.code = 'Enter'
+			window.dispatchEvent(enter);
+			setTimeout(() => {
+				expect(store.getActions()).toEqual(expectedActions);
+				done();
+			}, 200);
+		}, 200);
+	});
+
+
+
 })
