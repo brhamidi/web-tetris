@@ -51,7 +51,7 @@ describe('reducer score', () => {
 
 describe('reducer next shape', () => {
 	const initialState =
-		List().set(6, undefined).map(e => List().set(4, undefined));
+		List().set(3, undefined).map(e => List().set(3, undefined));
 
 	test('should return state', () => {
 		const shape = {
@@ -88,8 +88,8 @@ describe('reducer next shape', () => {
 		};
 		const action = {type: 'SET_NEXT_SHAPE', shape}
 		const res =  action.shape.shape.reduce((acc, curr) => {
-			const y = curr.y + 2;
-			const x = curr.x + 1;
+			const y = curr.y;
+			const x = curr.x;
 			return acc.setIn([y, x], action.shape.color);
 		}, initialState)
 

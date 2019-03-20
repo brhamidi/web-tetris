@@ -35,8 +35,9 @@ function handler(req, res) {
 	else
 	{
 		const fileName = req.url === '/' ? '/../../index.html' : '/../../build/bundle.js';
+		const mimType = req.url === '/' ? 'text/html' : 'application/javascript';
 
-		res.writeHead(200, {'Content-Type': 'text/html'});
+		res.writeHead(200, {'Content-Type': mimType});
 		fs.readFile(__dirname + fileName, null, function(error, data) {
 			if (error)
 			{

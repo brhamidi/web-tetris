@@ -1,6 +1,6 @@
 
 export const nextShapeStyle = {
-	width: '15%',
+	width: '400px',
 	backgroundColor: 'black',
 	display: 'flex',
 	flexFlow: 'row wrap',
@@ -8,25 +8,27 @@ export const nextShapeStyle = {
 }
 
 export const title = {
-	color: 'white'
+	color: 'white',
+	width: '300px',
+	textAlign: 'center'
+
 };
 
 export const blockStyle = (elem) => {
 	const borderColor = elem === undefined ? 'black' : 'white';
 
 	return {
-		width: '19%',
+		width: '50px',
 		height: '50px',
-		backgroundColor: elem === undefined ? 'black' : elem,
-		border: `solid ${borderColor} 1px`
+		backgroundColor: elem === undefined ? 'black' : elem
 	};
 
 };
 
 export const boardStyle = {
 	display: 'flex',
-	width: '80%',
-	height: '350px',
+	width: '200px',
+	height: '200px',
 	flexFlow: 'row wrap',
 	justifyContent: 'center'
 };

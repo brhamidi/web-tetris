@@ -1,7 +1,8 @@
 import React from 'react';
 import * as Styles from './nextShape.css';
 
-const NextShape = ({ shape }) => (
+const NextShape = ({ shape }) => {
+	return (
 	<div style={Styles.nextShapeStyle}>
 		<h2 style={Styles.title} > Next Shape </h2>
 		<div style={Styles.boardStyle} >
@@ -15,5 +16,5 @@ const NextShape = ({ shape }) => (
 		</div>
 	</div>
 );
-
+}
 export default NextShape;

@@ -1,6 +1,6 @@
 import { List } from 'immutable'
 
-export const initialState = List().set(6, undefined).map(e => List().set(4, undefined));
+export const initialState = List().set(3, undefined).map(e => List().set(3, undefined));
 
 const nextShape = (state = initialState, action) => {
 	switch (action.type) {
@@ -10,8 +10,8 @@ const nextShape = (state = initialState, action) => {
 			if (action.shape.shape)
 				return (
 					action.shape.shape.reduce((acc, curr) => {
-						const y = curr.y + 2;
-						const x = curr.x + 1;
+						const y = curr.y;
+						const x = curr.x;
 						return acc.setIn([y, x], action.shape.color);
 					}, initialState)
 				);

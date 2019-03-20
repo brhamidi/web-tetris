@@ -20,7 +20,7 @@ const mapStateToProps = state => ({
 	status: state.status
 })
 
-const socket = io.connect("http://localhost:3000");
+const socket = io("http://localhost:3000");
 
 const AppContainer = ({ info, status, dispatch }) => {
 	const getInfo = () => {
