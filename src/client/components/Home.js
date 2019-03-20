@@ -6,6 +6,7 @@ const Home = ({ status, cb }) => {
 	const [player, setPlayer] = useState('');
 
 	const handleSubmit = (e) => {
+		e.preventDefault();
 		if (room !== '' && player !== '') {
 			cb(room, player);
 			window.location.hash = `#${room}[${player}]`;
