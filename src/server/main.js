@@ -74,7 +74,8 @@ io.on('connection', function(socket){
 
 		if (ennemy)
 			ennemy.emit('won');
-		reset_game(actual_game);
+		if (actual_game)
+			reset_game(actual_game);
 	});
 
 	socket.on('new_tetrimino', function(spectre, malus) {
