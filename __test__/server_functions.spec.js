@@ -14,13 +14,15 @@ describe('Server Functions', () => {
 				ag: new Game('room', new Player('socket', 'player')),
 				ir: 'host',
 				mode1: serverFunction.new_mode('solo', undefined),
-				mode2: undefined
+				mode2: undefined,
+				meta: {name: undefined}
 			});
 	});
 
 	test('game already running', () => {
-		expect(serverFunction.game_already_running('game')).toEqual(
-			{ ag: 'game', ir: 'started', mode1: undefined, mode2: undefined	}) });
+		expect(serverFunction.game_already_running({name: 'game'})).toEqual(
+			{ ag: {name: 'game'}, ir: 'started', mode1: undefined, mode2: undefined,
+			meta: {name: 'game'}}) });
 
 	test('new_mode', () => {
 		expect(serverFunction.new_mode('mode', 'name'))
@@ -31,7 +33,8 @@ describe('Server Functions', () => {
 		const game = {player1: {name: 'p1'}, player2: undefined};
 
 		expect(serverFunction.player2_info('socket', 'room', 'p1', game))
-			.toEqual({ag: undefined, ir: 'name', mode1: undefined, mode2: undefined});
+			.toEqual({ag: undefined, ir: 'name', mode1: undefined, mode2: undefined,
+			meta: {name: 'p1'}});
 
 		expect(serverFunction.player2_info('socket', 'room', 'p2', game))
 			.toEqual(
@@ -39,7 +42,8 @@ describe('Server Functions', () => {
 					ag: game,
 					ir: 'player2',
 					mode1: serverFunction.new_mode('multi', game.player2.name),
-					mode2: serverFunction.new_mode('multi', game.player1.name)
+					mode2: serverFunction.new_mode('multi', game.player1.name),
+					meta: {name: undefined}
 				});
 	});
 
@@ -57,7 +61,8 @@ describe('Server Functions', () => {
 			.toEqual(serverFunction.player2_info('socket', 'room', 'player', game));
 
 		expect(serverFunction.create_info('socket', 'room', 'player', game_full, 'actual_game', []))
-			.toEqual({ag: undefined, ir: 'full', mode1: undefined, mode2: undefined});
+			.toEqual({ag: undefined, ir: 'full', mode1: undefined, mode2: undefined,
+			meta: {name: 'room'}});
 	});
 
 	test('get game', () => {
