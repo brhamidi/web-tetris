@@ -27,6 +27,8 @@ const AppContainer = ({ info, status, dispatch }) => {
 		const url = window.location.hash.slice(1);
 		const split1 = url.split(']');
 
+		if (window.location.hash === '')
+			return () => dispatch(setStatusGame(GameStatus.HOME));
 		if (split1[1] == '' && split1[2] == undefined) {
 			const split2 = split1[0].split('[');
 			if (split2[2] == undefined && split2[0] && split2[1]) {
@@ -43,9 +45,10 @@ const AppContainer = ({ info, status, dispatch }) => {
 		getInfo()();
 	}, [])
 
-	if (status === GameStatus.ERROR || status === GameStatus.LOADING || (info !== 'host' && info !== 'player2')) {
+	if (status === GameStatus.ERROR || status === GameStatus.LOADING || status === GameStatus.HOME ||
+		(info !== 'host' && info !== 'player2')) {
 		const curr_status =
-			status === GameStatus.ERROR || status === GameStatus.LOADING ? status : info;
+			status === GameStatus.ERROR || status === GameStatus.LOADING || status === GameStatus.HOME ? status : info;
 		return (
 			<div style={Styles.appStyle} >
 				<div style={Styles.headerStyle} >

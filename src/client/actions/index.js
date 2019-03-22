@@ -6,6 +6,7 @@ export const GameStatus = {
 	LOADING: 'LOADING',
 	WON: 'WON',
 	LOOSE: 'LOOSE',
+	HOME: 'HOME',
 	BEGINNING: 'BEGINNING'
 };
 

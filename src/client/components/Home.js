@@ -7,19 +7,36 @@ const Home = ({ status, cb }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		if (room !== '' && player !== '') {
+		if (room !== '' && player !== '')
 			cb(room, player);
-			window.location.hash = `#${room}[${player}]`;
+	}
+
+	const get_status_msg = (status)  => {
+		switch (status) {
+			case GameStatus.HOME:
+				return '';
+			case GameStatus.ERROR:
+				return '';
+			case GameStatus.LOADING:
+				return '';
+			case 'started':
+				return 'This game is already started for this room'
+			case 'full':
+				return 'This room is full';
+			case 'name':
+				return 'This name is not available for this room';
+			default:
+				return '???';
 		}
 	}
 
 	return (
 		<div>
-			<div className="status">{status}</div>
+			<div className="status">{get_status_msg(status)}</div>
 			<h3 className="title">Home Page</h3>
 			<form onSubmit={handleSubmit}>
 				<label>room</label>
-				<input className="room"
+				<input className="room" required
 					type="text"
 					value={room}
 					onChange={(e) => setRoom(e.target.value)}
@@ -28,8 +45,7 @@ const Home = ({ status, cb }) => {
 				<input className="player"
 					type="text"
 					value={player}
-					onChange={(e) => setPlayer(e.target.value)
-					}
+					onChange={(e) => setPlayer(e.target.value)}
 				/>
 				<input className="submit" type="submit" value="Submit" />
 			</form>
