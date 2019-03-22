@@ -23,7 +23,7 @@ const getInfo = () => {
 
 	if (window.location.hash === '')
 		return setStatusGame(GameStatus.HOME);
-	if (split1[1] == '' && split1[2] == undefined) {
+	if (split1[1] === '' && split1[2] == undefined) {
 		const split2 = split1[0].split('[');
 		if (split2[2] == undefined && split2[0] && split2[1]) {
 			const room = split2[0];
@@ -37,7 +37,8 @@ const getInfo = () => {
 
 const mapStateToProps = state => ({
 	info: state.info,
-	status: state.status
+	status: state.status,
+	gameList: state.gameList
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -46,7 +47,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 	HomeOnStart: () => dispatch(OnGame(socket))
 })
 
-const AppContainer = ({ info, status, OnStart, HomeCb, HomeOnStart}) => {
+const AppContainer = ({ info, status, OnStart, HomeCb, HomeOnStart, gameList }) => {
 	useEffect(() => {
 		OnStart();
 	}, [])
@@ -64,6 +65,7 @@ const AppContainer = ({ info, status, OnStart, HomeCb, HomeOnStart}) => {
 					status={curr_status}
 					cb={HomeCb}
 					OnStart={HomeOnStart}
+					gameList={gameList}
 				/>
 			</div>
 		)

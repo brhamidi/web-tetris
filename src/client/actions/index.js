@@ -49,7 +49,7 @@ export const setInfo = (socket, room, player) => {
 			dispatch(updateMode(mode));
 		})
 		socket.on('info_response', (msg => {
-			dispatch(info(msg));
+			dispatch(info(msg.info));
 			dispatch(setName(player))
 			dispatch(setStatusGame(GameStatus.BEGINNING));
 		}))
@@ -326,7 +326,7 @@ export const OnGame = (socket) => {
 		socket.once('gamesList', (list) => {
 			dispatch(setGameList(list));
 		})
-		socket.emit('gamesList');
+		socket.emit('games');
 	}
 }
 
