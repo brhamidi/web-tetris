@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { GameStatus } from '../actions'
 
-const Home = ({ status, cb }) => {
+const Home = ({ status, cb, OnStart}) => {
 	const [room, setRoom] = useState('');
 	const [player, setPlayer] = useState('');
 
@@ -29,6 +29,10 @@ const Home = ({ status, cb }) => {
 				return '???';
 		}
 	}
+
+	useEffect(() => {
+		OnStart();
+	}, [])
 
 	return (
 		<div>

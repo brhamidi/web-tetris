@@ -38,18 +38,21 @@ export const info = (info) => ({
 	info
 });
 
+export const setName = (name) => ({
+	type: 'SET_NAME',
+	name
+})
+
 export const setInfo = (socket, room, player) => {
-	return (dispatch, getState) => {
+	return (dispatch) => {
 		socket.on('mode', (mode) => {
 			dispatch(updateMode(mode));
 		})
 		socket.on('info_response', (msg => {
 			dispatch(info(msg));
-			const { status } = getState();
-			if (status !== GameStatus.RUNNING) {
-				dispatch(setStatusGame(GameStatus.BEGINNING));
-			}
-		}));
+			dispatch(setName(player))
+			dispatch(setStatusGame(GameStatus.BEGINNING));
+		}))
 		socket.emit('info', room, player);
 	}
 };
@@ -312,6 +315,20 @@ export const reset_board = {
 export const reset_next_shape = {
 	type: 'RESET_NEXT_SHAPE'
 };
+
+export const setGameList = (list) => ({
+	type: 'SET_GAME_LIST',
+	list
+})
+
+export const OnGame = (socket) => {
+	return (dispatch) => {
+		socket.once('gamesList', (list) => {
+			dispatch(setGameList(list));
+		})
+		socket.emit('gamesList');
+	}
+}
 
 export const OnCloseBoard = (socket) => {
 	return (dispatch, getState) => {
