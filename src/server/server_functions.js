@@ -1,6 +1,7 @@
 const	Player = require('./player.js');
 const	Game = require('./game.js');
 const	Tetromino = require('./tetromino.js');
+import {List} from 'immutable';
 
 export const create_room = (socket, room, player, list) => {
 	const actual_game = new Game(room, new Player(socket, player));
@@ -8,11 +9,14 @@ export const create_room = (socket, room, player, list) => {
 	return { ag: actual_game,
 		ir: 'host',
 		mode1: new_mode('solo', undefined),
-		mode2: undefined };
+		mode2: undefined,
+		meta: {name: undefined}
+	};
 };
 
 export const game_already_running = (actual_game) => {
-	return {ag: actual_game, ir: 'started', mode1: undefined, mode2: undefined};
+	return {ag: actual_game, ir: 'started', mode1: undefined, mode2: undefined,
+	meta: {name: actual_game.name}};
 };
 
 export const new_mode = (mode, name) => {
@@ -21,7 +25,8 @@ export const new_mode = (mode, name) => {
 
 export const player2_info = (socket, room, player, game) => {
 	if (game.player1.name === player)
-		return {ag: undefined, ir: 'name', mode1: undefined, mode2: undefined};
+		return {ag: undefined, ir: 'name', mode1: undefined, mode2: undefined,
+		meta: {name: player}};
 	else
 	{
 		game.player2 = new Player(socket, player);
@@ -29,7 +34,9 @@ export const player2_info = (socket, room, player, game) => {
 			ag: game,
 			ir: 'player2',
 			mode1: new_mode('multi', game.player2.name),
-			mode2: new_mode('multi', game.player1.name) };
+			mode2: new_mode('multi', game.player1.name),
+			meta: {name: undefined}
+		};
 	}
 };
 
@@ -41,7 +48,9 @@ export const create_info = (socket, room, player, game, actual_game, list) => {
 	else if (game.player2 === undefined)
 		return player2_info(socket, room, player, game);
 	else
-		return {ag: undefined, ir: 'full', mode1: undefined, mode2: undefined};
+		return {ag: undefined, ir: 'full', mode1: undefined, mode2: undefined,
+			meta: {name: room}
+		};
 };
 
 export const get_game = (room, list) => {
@@ -90,4 +99,21 @@ export const remove_game = (list, actual_game) =>
 {
 	return list.filter((game) => {
 		return game.name !== actual_game.name});
+};
+
+export const get_games_info = (list) =>
+{
+	return list.reduce((acc, curr) => {
+		return acc.push(curr.player2 != undefined ?
+			{
+				game: curr.name,
+				player1: curr.player1.name,
+				player2: curr.player2.name
+			} :
+			{
+				game: curr.name,
+				player1: curr.player1.name,
+				player2: undefined
+			});
+	}, List());
 };

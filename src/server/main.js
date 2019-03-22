@@ -7,9 +7,10 @@ const	fs = require('fs');
 const	Player = require('./player.js');
 const	Tetromino = require('./tetromino.js');
 const	Game = require('./game.js');
+import {List} from 'immutable';
 var		list_of_games = [];
 
-import {create_room, game_already_running, new_mode, create_info, get_game, get_next_tetriminos, reset_game, ennemy_socket, remove_game, start_game } from './server_functions';
+import {create_room, game_already_running, new_mode, create_info, get_game, get_next_tetriminos, reset_game, ennemy_socket, remove_game, start_game, get_games_info } from './server_functions';
 
 app.listen(port, hostname, () => {
 	console.log(`Server running at http://${hostname}:${port}/`);
@@ -61,7 +62,7 @@ io.on('connection', function(socket){
 		const info = create_info(socket, room, player, game, actual_game, list_of_games);
 
 		actual_game = info.ag;
-		socket.emit('info_response', info.ir);
+		socket.emit('info_response', {info: info.ir, meta: info.meta});
 		if (info.mode1)
 			actual_game.player1.socket.emit('mode', info.mode1);
 		if (info.mode2)
@@ -113,6 +114,10 @@ io.on('connection', function(socket){
 			if (actual_game.player1.socket.id === socket.id && actual_game.player2)
 				actual_game.player2.socket.emit('start');
 		}
+	});
+
+	socket.on('games', function () {
+		socket.emit('gamesList', get_games_info(List(list_of_games)));
 	});
 
 	socket.on('disconnect', function() {

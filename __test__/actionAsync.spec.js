@@ -36,7 +36,7 @@ beforeAll((done) => {
 	mockStore = configureStore(middlewares);
 	ioServer.on('connection', (socket) => {
 		socket.on('info', (a, b) => {
-			socket.emit('info_response', 'host');
+			socket.emit('info_response', {info: 'host', meta: {name: undefined}});
 			socket.emit('mode', 'mode');
 		})
 	})
