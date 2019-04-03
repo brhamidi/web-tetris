@@ -16,7 +16,7 @@ export const create_room = (socket, room, player, list) => {
 
 export const game_already_running = (actual_game) => {
 	return {ag: actual_game, ir: 'started', mode1: undefined, mode2: undefined,
-	meta: {name: actual_game.name}};
+	meta: {name: undefined}};
 };
 
 export const new_mode = (mode, name) => {
