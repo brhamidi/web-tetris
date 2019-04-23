@@ -28,7 +28,6 @@ let mockStore;
 let store;
 
 beforeAll((done) => {
-	jest.setTimeout(50000);
 	httpServer = http.createServer().listen(1337, '127.0.0.1');
 	httpServerAddr = httpServer.listen().address();
 	ioServer = ioBack(httpServer);
