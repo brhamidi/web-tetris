@@ -12,7 +12,7 @@ import { updateShape, GameStatus} from '../src/client/actions';
 import { List } from 'immutable';
 
 describe('reducer status', () => {
-	const initialState = GameStatus.LOADING
+	const initialState = GameStatus.HOME
 
 	test('should return the initial state', () => {
 		expect(status(undefined, {})).toEqual(initialState)

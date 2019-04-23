@@ -19,6 +19,7 @@ exports[`Home renders correctly 1`] = `
     <input
       className="room"
       onChange={[Function]}
+      required={true}
       type="text"
       value=""
     />
@@ -37,5 +38,10 @@ exports[`Home renders correctly 1`] = `
       value="Submit"
     />
   </form>
+  <div>
+    <p>
+      number of games: 
+    </p>
+  </div>
 </div>
 `;

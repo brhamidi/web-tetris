@@ -13,5 +13,8 @@ exports[`Score renders correctly 1`] = `
   <p>
      Score: 
   </p>
+  <p>
+     Player name: 
+  </p>
 </div>
 `;

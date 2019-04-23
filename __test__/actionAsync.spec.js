@@ -127,6 +127,8 @@ describe('Async action dispatch good action', () => {
 	test('setInfo - Game is running', (done) => {
 		const expectedActions = [
 			actions.info('host'),
+			actions.setName('test'),
+			actions.setStatusGame(GameStatus.BEGINNING),
 			actions.updateMode('mode')
 		]
 
@@ -140,6 +142,7 @@ describe('Async action dispatch good action', () => {
 	test('setInfo - Game is Loading', (done) => {
 		const expectedActions = [
 			actions.info('host'),
+			actions.setName('test'),
 			actions.setStatusGame(GameStatus.BEGINNING),
 			actions.updateMode('mode')
 		]

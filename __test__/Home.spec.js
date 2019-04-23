@@ -1,15 +1,19 @@
 import React from 'react';
 import { shallow, mount} from 'enzyme';
 import Home from '../src/client/components/Home';
+import { List } from 'immutable';
 
 describe('Home', () => {
 	test('renders correctly', () => {
-		const wrapper = shallow(<Home />);
+		const cb = jest.fn((a, b) => {});
+		const onStart = jest.fn((a, b) => {});
+		const wrapper = shallow(<Home OnStart={onStart} cb={cb} status={'ERROR'} gameList={List()} />);
 		expect(wrapper).toMatchSnapshot();
 	});
 	test('Simulate wrong input value', () => {
 		const cb = jest.fn((a, b) => {});
-		const wrapper = mount(<Home cb={cb} status={'ERROR'} />);
+		const onStart = jest.fn((a, b) => {});
+		const wrapper = mount(<Home OnStart={onStart} cb={cb} status={'ERROR'} gameList={List()} />);
 
 		expect(cb.mock.calls.length).toBe(0);
 

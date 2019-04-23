@@ -22,7 +22,7 @@ describe('Server Functions', () => {
 	test('game already running', () => {
 		expect(serverFunction.game_already_running({name: 'game'})).toEqual(
 			{ ag: {name: 'game'}, ir: 'started', mode1: undefined, mode2: undefined,
-			meta: {name: 'game'}}) });
+			meta: {name: undefined}}) });
 
 	test('new_mode', () => {
 		expect(serverFunction.new_mode('mode', 'name'))
